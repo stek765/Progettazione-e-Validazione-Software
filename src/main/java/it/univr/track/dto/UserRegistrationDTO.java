@@ -29,15 +29,11 @@ public class UserRegistrationDTO {
 
     private Gender gender;
 
-    @NotBlank(message = "Città obbligatoria")
     private String city;
 
-    @NotBlank(message = "Indirizzo obbligatorio")
     private String address;
 
-    @NotBlank(message = "Telefono obbligatorio")
     private String telephoneNumber;
 
-    @NotBlank(message = "Codice Fiscale obbligatorio")
     private String taxIdentificationNumber;
 }

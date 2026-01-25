@@ -17,9 +17,9 @@ The following scenarios are automated in `AcceptanceWebTest.java`:
 ### Scenario 1: Login and Profile
 **Goal**: Verify a user can access the system.
 **Steps**:
-1. Navigate to `/login`.
+1. Navigate to `/signIn`.
 2. Enter valid credentials.
-3. Assert redirection to `/dashboard`.
+3. Assert access to `/dashboard` or user specific pages.
 4. Navigate to `/profile` and verify header.
 
 ### Scenario 2: Admin User Creation
@@ -27,22 +27,21 @@ The following scenarios are automated in `AcceptanceWebTest.java`:
 **Steps**:
 1. Login as Admin.
 2. Navigate to User Administration (`/admin/users`).
-3. Click "Registra Nuovo".
-4. Verify the registration form is loaded.
+3. Verify access to registration controls.
 
 ### Scenario 3: Device Assignment
 **Goal**: Ensure Admin sees device controls.
 **Steps**:
 1. Login as Admin.
-2. Navigate to `/devices`.
+2. Navigate to `/web/devices`.
 3. Verify presence of "Provisioning with Qrcode" or actions bar.
 
 ### Scenario 4: Provisioning Activation
 **Goal**: Verify the provisioning page is accessible.
 **Steps**:
 1. Login as Admin.
-2. Navigate to `/devices/provision`.
-3. Asset page load (check for 404/Error).
+2. Navigate to `/web/provision`.
+3. Assert page load (check for checks against 404/Error).
 
 ### Scenario 5: Permissions Check
 **Goal**: Verify security boundaries.
@@ -56,7 +55,7 @@ The following scenarios are automated in `AcceptanceWebTest.java`:
 ### Test Pyramid
 1.  **Unit Tests**: Located in `it.univr.track.services`, these tests cover the core business logic (`UserAuthenticationService`, `UserAdminService`, `DeviceProvisioningService`) using **JUnit 5** and **Mockito**. They run fast and in isolation.
 2.  **Integration/Acceptance Tests (API)**: Located in `AcceptanceApiTest`, these verify that the Controllers answer correctly to HTTP requests using **REST Assured**.
-3.  **E2E/UI Tests**: Located in `AcceptanceWebTest`, these simulate real user behavior on the browser using **Selenium** and **Firefox (headless)**.
+3.  **E2E/UI Tests**: Located in `AcceptanceWebTest`, these simulate real user behavior on the browser using **Selenium** with **HtmlUnitDriver** (a fast, headless Java browser).
 
 ### Coverage
 To generate and view the coverage report:

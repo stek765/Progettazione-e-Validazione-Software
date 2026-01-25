@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="it" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,7 +21,7 @@
         .register-container {
             background: white;
             border-radius: var(--radius-xl);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             width: 100%;
             max-width: 700px;
             overflow: hidden;
@@ -202,6 +203,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="register-container">
         <!-- HEADER -->
@@ -217,10 +219,17 @@
             <div th:if="${errorMessage}" class="alert alert-error animate-shake">
                 <i class="fas fa-exclamation-triangle"></i>
                 <span th:text="${errorMessage}"></span>
+
+                <!-- Explicit list of all validation errors -->
+                <ul th:if="${#fields.hasErrors('${userRegistrationDTO.*}')}"
+                    style="margin-top: 10px; padding-left: 20px;">
+                    <li th:each="err : ${#fields.errors('${userRegistrationDTO.*}')}" th:text="${err}">Error desc</li>
+                </ul>
             </div>
 
             <!-- REGISTRATION FORM -->
-            <form th:action="${formAction} ?: @{/signUp}" th:object="${userRegistrationDTO}" method="post" id="registerForm">
+            <form th:action="${formAction} ?: @{/signUp}" th:object="${userRegistrationDTO}" method="post"
+                id="registerForm">
 
                 <!-- ACCOUNT SECTION -->
                 <div class="section-title">
@@ -236,13 +245,8 @@
                         </label>
                         <div class="form-input-icon">
                             <i class="fas fa-user"></i>
-                            <input
-                                type="text"
-                                id="username"
-                                th:field="*{username}"
-                                class="form-input"
-                                placeholder="Scegli un username unico"
-                                required>
+                            <input type="text" id="username" th:field="*{username}" class="form-input"
+                                placeholder="Scegli un username unico" required>
                         </div>
                         <div class="form-error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
                     </div>
@@ -254,13 +258,8 @@
                         </label>
                         <div class="form-input-icon">
                             <i class="fas fa-envelope"></i>
-                            <input
-                                type="email"
-                                id="email"
-                                th:field="*{email}"
-                                class="form-input"
-                                placeholder="nome@esempio.com"
-                                required>
+                            <input type="email" id="email" th:field="*{email}" class="form-input"
+                                placeholder="nome@esempio.com" required>
                         </div>
                         <div class="form-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
                     </div>
@@ -272,13 +271,8 @@
                         </label>
                         <div class="form-input-icon">
                             <i class="fas fa-lock"></i>
-                            <input
-                                type="password"
-                                id="password"
-                                th:field="*{password}"
-                                class="form-input"
-                                placeholder="Minimo 8 caratteri"
-                                required>
+                            <input type="password" id="password" th:field="*{password}" class="form-input"
+                                placeholder="Minimo 8 caratteri" required>
                         </div>
                         <div class="password-strength">
                             <div class="password-strength-bar" id="passwordStrength"></div>
@@ -293,15 +287,11 @@
                         </label>
                         <div class="form-input-icon">
                             <i class="fas fa-lock"></i>
-                            <input
-                                type="password"
-                                id="confirmPassword"
-                                th:field="*{confirmPassword}"
-                                class="form-input"
-                                placeholder="Ripeti la password"
-                                required>
+                            <input type="password" id="confirmPassword" th:field="*{confirmPassword}" class="form-input"
+                                placeholder="Ripeti la password" required>
                         </div>
-                        <div class="form-error" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></div>
+                        <div class="form-error" th:if="${#fields.hasErrors('confirmPassword')}"
+                            th:errors="*{confirmPassword}"></div>
                     </div>
                 </div>
 
@@ -319,15 +309,11 @@
                         </label>
                         <div class="form-input-icon">
                             <i class="fas fa-user"></i>
-                            <input
-                                type="text"
-                                id="firstname"
-                                th:field="*{firstname}"
-                                class="form-input"
-                                placeholder="Mario"
-                                required>
+                            <input type="text" id="firstname" th:field="*{firstname}" class="form-input"
+                                placeholder="Mario" required>
                         </div>
-                        <div class="form-error" th:if="${#fields.hasErrors('firstname')}" th:errors="*{firstname}"></div>
+                        <div class="form-error" th:if="${#fields.hasErrors('firstname')}" th:errors="*{firstname}">
+                        </div>
                     </div>
 
                     <!-- Last Name -->
@@ -337,13 +323,8 @@
                         </label>
                         <div class="form-input-icon">
                             <i class="fas fa-user"></i>
-                            <input
-                                type="text"
-                                id="lastname"
-                                th:field="*{lastname}"
-                                class="form-input"
-                                placeholder="Rossi"
-                                required>
+                            <input type="text" id="lastname" th:field="*{lastname}" class="form-input"
+                                placeholder="Rossi" required>
                         </div>
                         <div class="form-error" th:if="${#fields.hasErrors('lastname')}" th:errors="*{lastname}"></div>
                     </div>
@@ -380,12 +361,7 @@
                         </label>
                         <div class="form-input-icon">
                             <i class="fas fa-city"></i>
-                            <input
-                                type="text"
-                                id="city"
-                                th:field="*{city}"
-                                class="form-input"
-                                placeholder="Roma">
+                            <input type="text" id="city" th:field="*{city}" class="form-input" placeholder="Roma">
                         </div>
                     </div>
 
@@ -396,11 +372,7 @@
                         </label>
                         <div class="form-input-icon">
                             <i class="fas fa-phone"></i>
-                            <input
-                                type="tel"
-                                id="telephoneNumber"
-                                th:field="*{telephoneNumber}"
-                                class="form-input"
+                            <input type="tel" id="telephoneNumber" th:field="*{telephoneNumber}" class="form-input"
                                 placeholder="+39 123 456 7890">
                         </div>
                     </div>
@@ -412,11 +384,7 @@
                         </label>
                         <div class="form-input-icon">
                             <i class="fas fa-map-marker-alt"></i>
-                            <input
-                                type="text"
-                                id="address"
-                                th:field="*{address}"
-                                class="form-input"
+                            <input type="text" id="address" th:field="*{address}" class="form-input"
                                 placeholder="Via Roma, 123">
                         </div>
                     </div>
@@ -428,13 +396,8 @@
                         </label>
                         <div class="form-input-icon">
                             <i class="fas fa-id-card"></i>
-                            <input
-                                type="text"
-                                id="taxIdentificationNumber"
-                                th:field="*{taxIdentificationNumber}"
-                                class="form-input"
-                                placeholder="RSSMRA80A01H501U"
-                                maxlength="16">
+                            <input type="text" id="taxIdentificationNumber" th:field="*{taxIdentificationNumber}"
+                                class="form-input" placeholder="RSSMRA80A01H501U" maxlength="16">
                         </div>
                     </div>
                 </div>
@@ -463,7 +426,7 @@
         const passwordInput = document.getElementById('password');
         const strengthBar = document.getElementById('passwordStrength');
 
-        passwordInput.addEventListener('input', function() {
+        passwordInput.addEventListener('input', function () {
             const password = this.value;
             const strength = calculatePasswordStrength(password);
 
@@ -492,7 +455,7 @@
 
         // Password match validation
         const confirmPassword = document.getElementById('confirmPassword');
-        confirmPassword.addEventListener('input', function() {
+        confirmPassword.addEventListener('input', function () {
             if (this.value !== passwordInput.value && this.value.length > 0) {
                 this.style.borderColor = 'var(--danger)';
             } else {
@@ -501,14 +464,14 @@
         });
 
         // Form submission animation
-        document.getElementById('registerForm').addEventListener('submit', function(e) {
+        document.getElementById('registerForm').addEventListener('submit', function (e) {
             const btn = document.getElementById('submitBtn');
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creazione account...';
             btn.disabled = true;
         });
 
         // Auto-scroll to error
-        window.addEventListener('load', function() {
+        window.addEventListener('load', function () {
             const errorAlert = document.querySelector('.alert-error');
             if (errorAlert) {
                 errorAlert.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -521,4 +484,5 @@
     <!-- SmartTracking Custom Animations -->
     <script th:src="@{/js/smarttracking-animations.js}"></script>
 </body>
+
 </html>

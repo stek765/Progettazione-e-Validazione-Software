@@ -71,7 +71,6 @@ public class UserWebController {
         return "dashboard";
     }
 
-
     // Registrazione di un nuovo utente
 
     /**
@@ -90,39 +89,54 @@ public class UserWebController {
      */
     @PostMapping("/signUp")
     public String doSignUp(@Valid @ModelAttribute("userRegistrationDTO") UserRegistrationDTO dto,
-                           BindingResult result,
-                           RedirectAttributes redirectAttributes) {
+            BindingResult result,
+            RedirectAttributes redirectAttributes,
+            Model model) {
+
+        // Check for duplicate username
+        if (!userRepository.findByUsername(dto.getUsername()).isEmpty()) {
+            result.rejectValue("username", "duplicate", "Username già in uso.");
+        }
+
+        // Check password match
+        if (dto.getPassword() != null && !dto.getPassword().equals(dto.getConfirmPassword())) {
+            result.rejectValue("confirmPassword", "mismatch", "Le password non coincidono.");
+        }
+
+        // Check password complexity (using same logic as Service)
+        // Regex: 8 chars, 1 uppercase, 1 lowercase, 1 digit, 1 special char OR "pwd"
+        // (backdoor)
+        String password = dto.getPassword();
+        boolean isComplex = password != null
+                && password.matches("^(pwd|(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^A-Za-z0-9]).{8,})$");
+        if (!isComplex) {
+            result.rejectValue("password", "weak",
+                    "La password deve contenere almeno 8 caratteri, una maiuscola, una minuscola, un numero e un carattere speciale.");
+        }
 
         if (result.hasErrors()) {
+            model.addAttribute("errorMessage", "Si prega di correggere gli errori nel modulo.");
             return "signUp";
         }
 
-        boolean usernameOk = userRepository.findByUsername(dto.getUsername()).isEmpty();
-        boolean dataOk = signUpCheckService.checkSignUpData(dto.getEmail(), dto.getPassword(), dto.getConfirmPassword());
+        // All checks passed
+        UserRegistered newUser = UserRegistered.builder()
+                .firstname(dto.getFirstname())
+                .lastname(dto.getLastname())
+                .username(dto.getUsername())
+                .password(passwordEncoder.encode(dto.getPassword()))
+                .email(dto.getEmail())
+                .role(Role.USER)
+                .gender(dto.getGender())
+                .city(dto.getCity())
+                .address(dto.getAddress())
+                .telephoneNumber(dto.getTelephoneNumber())
+                .taxIdentificationNumber(dto.getTaxIdentificationNumber())
+                .build();
 
-        if (usernameOk && dataOk) {
-            UserRegistered newUser = UserRegistered.builder()
-                    .firstname(dto.getFirstname())
-                    .lastname(dto.getLastname())
-                    .username(dto.getUsername())
-                    .password(passwordEncoder.encode(dto.getPassword()))
-                    .email(dto.getEmail())
-                    .role(Role.USER)
-                    .gender(dto.getGender())
-                    .city(dto.getCity())
-                    .address(dto.getAddress())
-                    .telephoneNumber(dto.getTelephoneNumber())
-                    .taxIdentificationNumber(dto.getTaxIdentificationNumber())
-                    .build();
-
-            userRepository.save(newUser);
-            redirectAttributes.addFlashAttribute("successMessage", "Registrazione completata! Effettua il login.");
-            return "redirect:/signIn";
-
-        } else {
-            redirectAttributes.addFlashAttribute("errorMessage", "Dati non validi o username già esistente.");
-            return "redirect:/signUp";
-        }
+        userRepository.save(newUser);
+        redirectAttributes.addFlashAttribute("successMessage", "Registrazione completata! Effettua il login.");
+        return "redirect:/signIn";
     }
 
     // Autenticazione
@@ -132,8 +146,8 @@ public class UserWebController {
      */
     @GetMapping("/signIn")
     public String signInForm(@RequestParam(required = false) String error,
-                             @RequestParam(required = false) String logout,
-                             Model model) {
+            @RequestParam(required = false) String logout,
+            Model model) {
         if (error != null) {
             model.addAttribute("errorMessage", "Username o password errati");
         }
@@ -145,19 +159,24 @@ public class UserWebController {
 
     // La logica di POST /signIn è gestita tipicamente da Spring Security.
     // Se il tuo SecurityConfig è configurato per intercettare il form login,
-    // questo metodo potrebbe non servire a meno che tu non stia facendo auth manuale.
-    // Tuttavia, per "lasciare tutto com'è", manterrò la versione vecchia o mi adeguerò 
+    // questo metodo potrebbe non servire a meno che tu non stia facendo auth
+    // manuale.
+    // Tuttavia, per "lasciare tutto com'è", manterrò la versione vecchia o mi
+    // adeguerò
     // a quella nuova che NON HA una POST /signIn perché ci pensa Spring Security.
     // Il nuovo controller NON aveva il metodo POST /signIn.
-    // Il vecchio controller AVEVA il metodo POST /signIn per fare controlli manuali.
+    // Il vecchio controller AVEVA il metodo POST /signIn per fare controlli
+    // manuali.
     // Visto che hai SecurityConfig, è probabile che tu debba usare quello.
-    // Rimuovo il metodo manuale POST /signIn per affidarmi a Spring Security (come il nuovo controller).
+    // Rimuovo il metodo manuale POST /signIn per affidarmi a Spring Security (come
+    // il nuovo controller).
 
     // Visualizzazione Profilo
 
     @GetMapping("/profile")
     public String showProfile(Authentication authentication, Model model) {
-        if (authentication == null) return "redirect:/signIn";
+        if (authentication == null)
+            return "redirect:/signIn";
         String username = authentication.getName();
 
         // Pass isAdmin flag to the view for navbar consistency
@@ -186,10 +205,10 @@ public class UserWebController {
 
     @PostMapping("/profile")
     public String updateProfile(@Valid @ModelAttribute("userProfile") UserProfileDTO dto,
-                                BindingResult result,
-                                Authentication authentication,
-                                RedirectAttributes redirectAttributes,
-                                Model model) { // Added Model for returning isAdmin if errors occur
+            BindingResult result,
+            Authentication authentication,
+            RedirectAttributes redirectAttributes,
+            Model model) { // Added Model for returning isAdmin if errors occur
 
         boolean isAdmin = authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ADMIN"));
@@ -204,7 +223,8 @@ public class UserWebController {
             // Aggiorna solo i campi modificabili
             user.setFirstname(dto.getFirstname());
             user.setLastname(dto.getLastname());
-            // user.setEmail(dto.getEmail()); // Spesso l'email è legata all'account, dipende dalle policy
+            // user.setEmail(dto.getEmail()); // Spesso l'email è legata all'account,
+            // dipende dalle policy
             user.setCity(dto.getCity());
             user.setAddress(dto.getAddress());
             user.setTelephoneNumber(dto.getTelephoneNumber());
