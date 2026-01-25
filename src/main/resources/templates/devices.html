@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="it" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="_csrf" th:content="${_csrf.token}"/>
-    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <!-- CSRF Meta Tags (Render only if CSRF is enabled) -->
+    <meta th:if="${_csrf != null}" name="_csrf" th:content="${_csrf.token}" />
+    <meta th:if="${_csrf != null}" name="_csrf_header" th:content="${_csrf.headerName}" />
     <title>SmartTracking - I Miei Dispositivi</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/smarttracking-design-system.css}">
@@ -116,6 +118,7 @@
         }
     </style>
 </head>
+
 <body>
     <!-- NAVBAR MODERNA -->
     <nav class="navbar">
@@ -125,7 +128,8 @@
         </div>
         <div class="nav-links">
             <a th:href="@{/dashboard}"><i class="fas fa-home"></i> Dashboard</a>
-            <a th:href="@{/devices}" style="background:var(--primary); color:white;"><i class="fas fa-microchip"></i> Dispositivi</a>
+            <a th:href="@{/devices}" style="background:var(--primary); color:white;"><i class="fas fa-microchip"></i>
+                Dispositivi</a>
             <a th:href="@{/shipments}"><i class="fas fa-shipping-fast"></i> Spedizioni</a>
             <a th:href="@{/profile}"><i class="fas fa-user"></i> Profilo</a>
 
@@ -191,16 +195,15 @@
                 <div class="device-info">
                     <i class="fas fa-info-circle"></i>
                     <strong>Stato:</strong>
-                    <span class="status-badge"
-                          th:classappend="${'status-' + #strings.toLowerCase(device.status)}"
-                          th:text="${device.status}">ACTIVE</span>
+                    <span class="status-badge" th:classappend="${'status-' + #strings.toLowerCase(device.status)}"
+                        th:text="${device.status}">ACTIVE</span>
                 </div>
 
                 <div class="device-info" th:if="${device.currentShipmentId != null}">
                     <i class="fas fa-shipping-fast"></i>
                     <strong>Spedizione:</strong>
                     <a th:href="@{'/shipments/' + ${device.currentShipmentId}}"
-                       style="color: var(--primary); text-decoration: none;">
+                        style="color: var(--primary); text-decoration: none;">
                         Vedi dettagli
                     </a>
                 </div>
@@ -226,15 +229,15 @@
     <script th:src="@{/js/smarttracking-animations.js}"></script>
     <script>
         async function simulateRequest() {
-            if(!confirm("Vuoi simulare una richiesta di provisioning automatica? Un nuovo dispositivo 'Virgin' verrà creato e associato a te immediatamente.")) return;
+            if (!confirm("Vuoi simulare una richiesta di provisioning automatica? Un nuovo dispositivo 'Virgin' verrà creato e associato a te immediatamente.")) return;
 
             try {
                 const initRes = await fetch('/api/device/init', {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ initCertificate: 'INIT_SECRET_2024' })
                 });
-                
+
                 if (!initRes.ok) throw new Error("Device initialization failed");
                 const initData = await initRes.json();
                 const mac = initData.macAddress;
@@ -242,10 +245,14 @@
                 const formData = new URLSearchParams();
                 formData.append('macAddress', mac);
 
-                const csrfToken = document.querySelector("meta[name='_csrf']").getAttribute("content");
-                const csrfHeader = document.querySelector("meta[name='_csrf_header']").getAttribute("content");
                 const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-                headers[csrfHeader] = csrfToken;
+
+                // Add CSRF only if present
+                const csrfMeta = document.querySelector("meta[name='_csrf']");
+                const csrfHeaderMeta = document.querySelector("meta[name='_csrf_header']");
+                if (csrfMeta && csrfHeaderMeta) {
+                    headers[csrfHeaderMeta.getAttribute("content")] = csrfMeta.getAttribute("content");
+                }
 
                 const assocRes = await fetch('/devices/associate', {
                     method: 'POST',
@@ -267,4 +274,5 @@
         }
     </script>
 </body>
+
 </html>

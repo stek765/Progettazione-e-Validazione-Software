@@ -4,7 +4,7 @@
  */
 
 // Wait for DOM and anime.js to be ready
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
 
     // Check if anime.js is loaded
     if (typeof anime === 'undefined') {
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
             translateY: [30, 0],
             opacity: [0, 1],
             duration: 800,
-            delay: anime.stagger(100, {start: 200}),
+            delay: anime.stagger(100, { start: 200 }),
             easing: 'easeOutQuad'
         });
     }
@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 round: 1,
                 duration: 2000,
                 easing: 'easeOutExpo',
-                update: function() {
+                update: function () {
                     stat.textContent = obj.value;
                 }
             });
@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const buttons = document.querySelectorAll('.btn, button[type="submit"]');
 
         buttons.forEach(button => {
-            button.addEventListener('mousedown', function() {
+            button.addEventListener('mousedown', function () {
                 anime({
                     targets: this,
                     scale: 0.95,
@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             });
 
-            button.addEventListener('mouseup', function() {
+            button.addEventListener('mouseup', function () {
                 anime({
                     targets: this,
                     scale: 1,
@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             });
 
-            button.addEventListener('mouseleave', function() {
+            button.addEventListener('mouseleave', function () {
                 anime({
                     targets: this,
                     scale: 1,
@@ -208,7 +208,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         inputs.forEach(input => {
             // Focus animation
-            input.addEventListener('focus', function() {
+            input.addEventListener('focus', function () {
                 anime({
                     targets: this,
                     scale: [1, 1.02],
@@ -218,7 +218,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             // Blur animation
-            input.addEventListener('blur', function() {
+            input.addEventListener('blur', function () {
                 anime({
                     targets: this,
                     scale: [1.02, 1],
@@ -274,7 +274,8 @@ document.addEventListener('DOMContentLoaded', function() {
     /**
      * Create toast notification
      */
-    window.showToast = function(message, type = 'success') {
+    window.showToast = function (message, type) {
+        if (type === undefined) type = 'success';
         const toast = document.createElement('div');
         toast.className = `toast toast-${type}`;
         toast.innerHTML = `
@@ -318,7 +319,7 @@ document.addEventListener('DOMContentLoaded', function() {
             scale: [0.8, 1],
             opacity: [0, 1],
             duration: 600,
-            delay: anime.stagger(50, {start: 400}),
+            delay: anime.stagger(50, { start: 400 }),
             easing: 'easeOutElastic(1, .6)'
         });
     }
@@ -333,7 +334,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const icon = card.querySelector('.action-icon i, i');
             if (!icon) return;
 
-            card.addEventListener('mouseenter', function() {
+            card.addEventListener('mouseenter', function () {
                 anime({
                     targets: icon,
                     rotate: [0, 360],
@@ -355,7 +356,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const links = document.querySelectorAll('a:not([target="_blank"])');
 
         links.forEach(link => {
-            link.addEventListener('click', function(e) {
+            link.addEventListener('click', function (e) {
                 // Skip for external links and logout
                 if (this.href.includes('http') && !this.href.includes(window.location.host)) return;
                 if (this.href.includes('/logout')) return;
@@ -432,7 +433,7 @@ document.addEventListener('DOMContentLoaded', function() {
 /**
  * Loading spinner animation
  */
-window.showLoadingSpinner = function(element) {
+window.showLoadingSpinner = function (element) {
     const spinner = document.createElement('div');
     spinner.className = 'spinner';
     element.appendChild(spinner);
@@ -451,7 +452,7 @@ window.showLoadingSpinner = function(element) {
 /**
  * Success checkmark animation
  */
-window.showSuccessCheckmark = function(element) {
+window.showSuccessCheckmark = function (element) {
     const checkmark = document.createElement('i');
     checkmark.className = 'fas fa-check-circle';
     checkmark.style.fontSize = '3rem';

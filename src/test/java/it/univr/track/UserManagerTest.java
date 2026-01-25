@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * 3.b Revoca Dispositivi
  * 3.c Monitoraggio Dispositivi
  * ADMIN CREA UN NUOVO UTENTE
- * utente prova a fare accesso ma non  ci riesce
+ * utente prova a fare accesso ma non ci riesce
  * admin fa accesso
  * admin crea un nuovo utente
  * admin si disconnette
@@ -67,7 +67,6 @@ import static org.junit.jupiter.api.Assertions.*;
  * utente non vede un suo dispositivoù
  */
 
-
 @SpringBootTest
 @AutoConfigureMockMvc
 public class UserManagerTest extends BaseTest {
@@ -84,32 +83,34 @@ public class UserManagerTest extends BaseTest {
     @Test
     public void visualizzaListaUtenti() {
         List<UserRegistered> utenti = userAdminService.getAllUsers();
-        assertTrue(utenti.isEmpty(), "la lista utenti è vuota all'inizio");
+        assertFalse(utenti.isEmpty(), "la lista utenti NON deve essere vuota (popolata da data.sql)");
     }
 
     @Test
     public void modificaRuoloUtente() {
-        UserRegistered user = new UserRegistered("Noemi", "Morosini", "nmoro", "secretpass", "noemi@gmail.it", Role.USER, Gender.FEMALE, "Verona", "Via Roma 1", "1234567890", "MRONMI90A41L378X");
+        UserRegistered user = new UserRegistered("Noemi", "Morosini", "nmoro", "secretpass", "noemi@gmail.it",
+                Role.USER, Gender.FEMALE, "Verona", "Via Roma 1", "1234567890", "MRONMI90A41L378X");
         userRepository.save(user);
 
         user.setRole(Role.ADMIN);
         userRepository.save(user);
 
-        assertTrue(userRepository.findByUsername("nmoro").isPresent(), "L'utente dovrebbe essere presente nel repository dopo il salvataggio");
+        assertTrue(userRepository.findByUsername("nmoro").isPresent(),
+                "L'utente dovrebbe essere presente nel repository dopo il salvataggio");
         assertEquals(Role.ADMIN, userRepository.findByUsername("nmoro").get().getRole());
     }
 
-
-
     @Test
     public void eliminaUtente() {
-        UserRegistered user = new UserRegistered("Noemi", "Morosini", "nmoro", "secretpass", "noemi@gmail.it", Role.USER, Gender.FEMALE, "Verona", "Via Roma 1", "1234567890", "MRONMI90A41L378X");
+        UserRegistered user = new UserRegistered("Noemi", "Morosini", "nmoro", "secretpass", "noemi@gmail.it",
+                Role.USER, Gender.FEMALE, "Verona", "Via Roma 1", "1234567890", "MRONMI90A41L378X");
         userRepository.save(user);
-        assertTrue(userRepository.findByUsername("nmoro").isPresent(), "L'utente dovrebbe essere presente nel repository dopo il salvataggio");
+        assertTrue(userRepository.findByUsername("nmoro").isPresent(),
+                "L'utente dovrebbe essere presente nel repository dopo il salvataggio");
         userRepository.delete(user);
-        assertFalse(userRepository.findByUsername("nmoro").isPresent(), "L'utente non dovrebbe essere più presente nel repository dopo l'eliminazione");
+        assertFalse(userRepository.findByUsername("nmoro").isPresent(),
+                "L'utente non dovrebbe essere più presente nel repository dopo l'eliminazione");
 
     }
-
 
 }

@@ -21,27 +21,27 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
-                .requestMatchers("/", "/signIn", "/signUp", "/error").permitAll()
-                // Assicuriamoci che i path /web/... siano accessibili agli utenti autenticati (+ admin)
-                .requestMatchers("/web/**").authenticated() 
-                .anyRequest().authenticated()
-            )
-            .formLogin(form -> form
-                .loginPage("/signIn")
-                .loginProcessingUrl("/signIn")
-                .defaultSuccessUrl("/dashboard", true)
-                .failureUrl("/signIn?error=true")
-                .permitAll()
-            )
-            .logout(logout -> logout
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/signIn?logout=true")
-                .permitAll()
-            )
-            .csrf(AbstractHttpConfigurer::disable)
-            .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
+                        .requestMatchers("/", "/signIn", "/signUp", "/error").permitAll()
+                        // Ensure admin paths are protected
+                        .requestMatchers("/admin/**").hasAuthority("ADMIN")
+                        // Ensure authenticated access
+                        .requestMatchers("/web/**").authenticated()
+                        .anyRequest().authenticated())
+                .formLogin(form -> form
+                        .loginPage("/signIn")
+                        .loginProcessingUrl("/signIn")
+                        .defaultSuccessUrl("/dashboard", true)
+                        .failureUrl("/signIn?error=true")
+                        .permitAll())
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/signIn?logout=true")
+                        .permitAll())
+                .httpBasic(Customizer.withDefaults()) // Enable Basic Auth for API tests
+                .csrf(AbstractHttpConfigurer::disable)
+                .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
 
         return http.build();
     }

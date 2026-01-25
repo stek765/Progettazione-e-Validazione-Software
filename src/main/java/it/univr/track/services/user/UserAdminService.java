@@ -11,13 +11,19 @@ import java.util.List;
 @RequiredArgsConstructor
 @Log4j2
 public class UserAdminService {
-    // Implementazione del servizio di amministrazione utenti
+
+    private final it.univr.track.repository.UserRepository userRepository;
 
     public List<UserRegistered> getAllUsers() {
-        // Metodo per ottenere tutti gli utenti
         log.info("Recupero della lista di tutti gli utenti");
-        return List.of();
+        return (List<UserRegistered>) userRepository.findAll();
     }
 
-
+    public UserRegistered createUser(UserRegistered user) {
+        log.info("Creating new user: {}", user.getEmail());
+        if (userRepository.existsByEmailIgnoreCase(user.getEmail())) {
+            throw new IllegalArgumentException("Email already exists");
+        }
+        return userRepository.save(user);
+    }
 }

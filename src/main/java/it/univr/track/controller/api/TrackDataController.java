@@ -2,11 +2,11 @@ package it.univr.track.controller.api;
 
 import it.univr.track.entity.TrackData;
 import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-@Controller
+@RestController
 @Profile("gestione-dati-tracking")
 public class TrackDataController {
 

@@ -19,6 +19,7 @@ public class UserAuthenticationService {
     private static final long LOCK_SECONDS = 60; // 1 minuto (per test); in prod magari 300+
     private static final String GENERIC_ERROR = "Credenziali non valide";
     private final UserRepository userRepository;
+    private final java.time.Clock clock;
 
     @Transactional
     public void login(String email, String rawPassword) {
@@ -33,7 +34,7 @@ public class UserAuthenticationService {
                     return new AuthenticationFailedException(GENERIC_ERROR);
                 });
 
-        Instant now = Instant.now();
+        Instant now = Instant.now(clock);
 
         // se lock attivo: fallisci anche se password corretta
         if (user.getLockedUntil() != null && now.isBefore(user.getLockedUntil())) {

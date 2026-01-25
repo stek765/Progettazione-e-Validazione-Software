@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @Profile("gestione-dispositivi")
 public class DeviceController {
 
@@ -38,6 +38,5 @@ public class DeviceController {
     public Device[] devices() {
         return new Device[0];
     }
-
 
 }
