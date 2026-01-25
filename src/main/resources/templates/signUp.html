@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartTracking - Registrazione</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/smarttracking-design-system.css}">
+    <style>
+        /* Page-specific styles */
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            padding: var(--spacing-xl) var(--spacing-md);
+        }
+
+        .register-container {
+            background: white;
+            border-radius: var(--radius-xl);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 700px;
+            overflow: hidden;
+            animation: fadeIn 0.4s ease-out;
+            margin: var(--spacing-xl) 0;
+        }
+
+        .register-header {
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            color: white;
+            padding: var(--spacing-xl) var(--spacing-xl);
+            text-align: center;
+        }
+
+        .register-header i {
+            font-size: 2.5rem;
+            margin-bottom: var(--spacing-md);
+            display: block;
+        }
+
+        .register-header h1 {
+            color: white;
+            font-size: 1.75rem;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .register-header p {
+            opacity: 0.9;
+            font-size: 0.95rem;
+            margin-bottom: 0;
+        }
+
+        .register-body {
+            padding: var(--spacing-2xl) var(--spacing-xl);
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        /* Custom scrollbar */
+        .register-body::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .register-body::-webkit-scrollbar-track {
+            background: var(--gray-100);
+            border-radius: var(--radius-full);
+        }
+
+        .register-body::-webkit-scrollbar-thumb {
+            background: var(--gray-300);
+            border-radius: var(--radius-full);
+        }
+
+        .register-body::-webkit-scrollbar-thumb:hover {
+            background: var(--gray-400);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-lg);
+        }
+
+        .form-grid .form-group-full {
+            grid-column: 1 / -1;
+        }
+
+        .form-input-icon {
+            position: relative;
+        }
+
+        .form-input-icon i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-400);
+        }
+
+        .form-input-icon input,
+        .form-input-icon select {
+            padding-left: 3rem;
+        }
+
+        .required-indicator {
+            color: var(--danger);
+            font-weight: bold;
+            margin-left: 2px;
+        }
+
+        .section-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin: var(--spacing-xl) 0 var(--spacing-lg);
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 2px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .section-title:first-child {
+            margin-top: 0;
+        }
+
+        .section-title i {
+            color: var(--success);
+        }
+
+        .register-footer {
+            padding: var(--spacing-lg) var(--spacing-xl);
+            background: var(--gray-50);
+            text-align: center;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .register-footer a {
+            color: var(--success);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .register-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .password-strength {
+            height: 4px;
+            background: var(--gray-200);
+            border-radius: var(--radius-full);
+            margin-top: var(--spacing-sm);
+            overflow: hidden;
+        }
+
+        .password-strength-bar {
+            height: 100%;
+            width: 0%;
+            transition: all var(--transition-normal);
+            border-radius: var(--radius-full);
+        }
+
+        .password-strength-bar.weak {
+            width: 33%;
+            background: var(--danger);
+        }
+
+        .password-strength-bar.medium {
+            width: 66%;
+            background: var(--warning);
+        }
+
+        .password-strength-bar.strong {
+            width: 100%;
+            background: var(--success);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: var(--spacing-md);
+            }
+
+            .register-container {
+                margin: var(--spacing-md) 0;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .register-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .register-body {
+                padding: var(--spacing-lg);
+                max-height: 60vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <!-- HEADER -->
+        <div class="register-header">
+            <i class="fas fa-user-plus"></i>
+            <h1>Crea il tuo Account</h1>
+            <p>Unisciti a SmartTracking per tracciare le tue spedizioni</p>
+        </div>
+
+        <!-- BODY -->
+        <div class="register-body">
+            <!-- Error Message -->
+            <div th:if="${errorMessage}" class="alert alert-error animate-shake">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span th:text="${errorMessage}"></span>
+            </div>
+
+            <!-- REGISTRATION FORM -->
+            <form th:action="${formAction} ?: @{/signUp}" th:object="${userRegistrationDTO}" method="post" id="registerForm">
+
+                <!-- ACCOUNT SECTION -->
+                <div class="section-title">
+                    <i class="fas fa-user-shield"></i>
+                    Informazioni Account
+                </div>
+
+                <div class="form-grid">
+                    <!-- Username -->
+                    <div class="form-group form-group-full">
+                        <label class="form-label" for="username">
+                            <i class="fas fa-user"></i> Username <span class="required-indicator">*</span>
+                        </label>
+                        <div class="form-input-icon">
+                            <i class="fas fa-user"></i>
+                            <input
+                                type="text"
+                                id="username"
+                                th:field="*{username}"
+                                class="form-input"
+                                placeholder="Scegli un username unico"
+                                required>
+                        </div>
+                        <div class="form-error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-group form-group-full">
+                        <label class="form-label" for="email">
+                            <i class="fas fa-envelope"></i> Email <span class="required-indicator">*</span>
+                        </label>
+                        <div class="form-input-icon">
+                            <i class="fas fa-envelope"></i>
+                            <input
+                                type="email"
+                                id="email"
+                                th:field="*{email}"
+                                class="form-input"
+                                placeholder="nome@esempio.com"
+                                required>
+                        </div>
+                        <div class="form-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="form-group">
+                        <label class="form-label" for="password">
+                            <i class="fas fa-lock"></i> Password <span class="required-indicator">*</span>
+                        </label>
+                        <div class="form-input-icon">
+                            <i class="fas fa-lock"></i>
+                            <input
+                                type="password"
+                                id="password"
+                                th:field="*{password}"
+                                class="form-input"
+                                placeholder="Minimo 8 caratteri"
+                                required>
+                        </div>
+                        <div class="password-strength">
+                            <div class="password-strength-bar" id="passwordStrength"></div>
+                        </div>
+                        <div class="form-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+                    </div>
+
+                    <!-- Confirm Password -->
+                    <div class="form-group">
+                        <label class="form-label" for="confirmPassword">
+                            <i class="fas fa-lock"></i> Conferma Password <span class="required-indicator">*</span>
+                        </label>
+                        <div class="form-input-icon">
+                            <i class="fas fa-lock"></i>
+                            <input
+                                type="password"
+                                id="confirmPassword"
+                                th:field="*{confirmPassword}"
+                                class="form-input"
+                                placeholder="Ripeti la password"
+                                required>
+                        </div>
+                        <div class="form-error" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></div>
+                    </div>
+                </div>
+
+                <!-- PERSONAL INFO SECTION -->
+                <div class="section-title">
+                    <i class="fas fa-id-card"></i>
+                    Dati Personali
+                </div>
+
+                <div class="form-grid">
+                    <!-- First Name -->
+                    <div class="form-group">
+                        <label class="form-label" for="firstname">
+                            <i class="fas fa-user"></i> Nome <span class="required-indicator">*</span>
+                        </label>
+                        <div class="form-input-icon">
+                            <i class="fas fa-user"></i>
+                            <input
+                                type="text"
+                                id="firstname"
+                                th:field="*{firstname}"
+                                class="form-input"
+                                placeholder="Mario"
+                                required>
+                        </div>
+                        <div class="form-error" th:if="${#fields.hasErrors('firstname')}" th:errors="*{firstname}"></div>
+                    </div>
+
+                    <!-- Last Name -->
+                    <div class="form-group">
+                        <label class="form-label" for="lastname">
+                            <i class="fas fa-user"></i> Cognome <span class="required-indicator">*</span>
+                        </label>
+                        <div class="form-input-icon">
+                            <i class="fas fa-user"></i>
+                            <input
+                                type="text"
+                                id="lastname"
+                                th:field="*{lastname}"
+                                class="form-input"
+                                placeholder="Rossi"
+                                required>
+                        </div>
+                        <div class="form-error" th:if="${#fields.hasErrors('lastname')}" th:errors="*{lastname}"></div>
+                    </div>
+
+                    <!-- Gender -->
+                    <div class="form-group form-group-full">
+                        <label class="form-label" for="gender">
+                            <i class="fas fa-venus-mars"></i> Genere <span class="required-indicator">*</span>
+                        </label>
+                        <div class="form-input-icon">
+                            <i class="fas fa-venus-mars"></i>
+                            <select id="gender" th:field="*{gender}" class="form-select" required>
+                                <option value="">Seleziona il tuo genere</option>
+                                <option value="MALE">Maschio</option>
+                                <option value="FEMALE">Femmina</option>
+                                <option value="OTHER">Altro</option>
+                            </select>
+                        </div>
+                        <div class="form-error" th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}"></div>
+                    </div>
+                </div>
+
+                <!-- CONTACT INFO SECTION -->
+                <div class="section-title">
+                    <i class="fas fa-address-card"></i>
+                    Informazioni di Contatto <span class="text-muted text-small">(Opzionale)</span>
+                </div>
+
+                <div class="form-grid">
+                    <!-- City -->
+                    <div class="form-group">
+                        <label class="form-label" for="city">
+                            <i class="fas fa-city"></i> Città
+                        </label>
+                        <div class="form-input-icon">
+                            <i class="fas fa-city"></i>
+                            <input
+                                type="text"
+                                id="city"
+                                th:field="*{city}"
+                                class="form-input"
+                                placeholder="Roma">
+                        </div>
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="form-group">
+                        <label class="form-label" for="telephoneNumber">
+                            <i class="fas fa-phone"></i> Telefono
+                        </label>
+                        <div class="form-input-icon">
+                            <i class="fas fa-phone"></i>
+                            <input
+                                type="tel"
+                                id="telephoneNumber"
+                                th:field="*{telephoneNumber}"
+                                class="form-input"
+                                placeholder="+39 123 456 7890">
+                        </div>
+                    </div>
+
+                    <!-- Address -->
+                    <div class="form-group form-group-full">
+                        <label class="form-label" for="address">
+                            <i class="fas fa-map-marker-alt"></i> Indirizzo
+                        </label>
+                        <div class="form-input-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <input
+                                type="text"
+                                id="address"
+                                th:field="*{address}"
+                                class="form-input"
+                                placeholder="Via Roma, 123">
+                        </div>
+                    </div>
+
+                    <!-- Tax ID -->
+                    <div class="form-group form-group-full">
+                        <label class="form-label" for="taxIdentificationNumber">
+                            <i class="fas fa-id-card"></i> Codice Fiscale
+                        </label>
+                        <div class="form-input-icon">
+                            <i class="fas fa-id-card"></i>
+                            <input
+                                type="text"
+                                id="taxIdentificationNumber"
+                                th:field="*{taxIdentificationNumber}"
+                                class="form-input"
+                                placeholder="RSSMRA80A01H501U"
+                                maxlength="16">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-success btn-full btn-large mt-4" id="submitBtn">
+                    <i class="fas fa-user-check"></i>
+                    Crea Account
+                </button>
+            </form>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="register-footer">
+            <p class="text-small">
+                Hai già un account?
+                <a th:href="@{/signIn}">
+                    <i class="fas fa-sign-in-alt"></i> Accedi ora
+                </a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Password strength indicator
+        const passwordInput = document.getElementById('password');
+        const strengthBar = document.getElementById('passwordStrength');
+
+        passwordInput.addEventListener('input', function() {
+            const password = this.value;
+            const strength = calculatePasswordStrength(password);
+
+            strengthBar.className = 'password-strength-bar';
+            if (strength > 0) {
+                if (strength < 40) {
+                    strengthBar.classList.add('weak');
+                } else if (strength < 70) {
+                    strengthBar.classList.add('medium');
+                } else {
+                    strengthBar.classList.add('strong');
+                }
+            }
+        });
+
+        function calculatePasswordStrength(password) {
+            let strength = 0;
+            if (password.length >= 8) strength += 25;
+            if (password.length >= 12) strength += 15;
+            if (/[a-z]/.test(password)) strength += 15;
+            if (/[A-Z]/.test(password)) strength += 15;
+            if (/[0-9]/.test(password)) strength += 15;
+            if (/[^a-zA-Z0-9]/.test(password)) strength += 15;
+            return strength;
+        }
+
+        // Password match validation
+        const confirmPassword = document.getElementById('confirmPassword');
+        confirmPassword.addEventListener('input', function() {
+            if (this.value !== passwordInput.value && this.value.length > 0) {
+                this.style.borderColor = 'var(--danger)';
+            } else {
+                this.style.borderColor = '';
+            }
+        });
+
+        // Form submission animation
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            const btn = document.getElementById('submitBtn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creazione account...';
+            btn.disabled = true;
+        });
+
+        // Auto-scroll to error
+        window.addEventListener('load', function() {
+            const errorAlert = document.querySelector('.alert-error');
+            if (errorAlert) {
+                errorAlert.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        });
+    </script>
+
+    <!-- Anime.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <!-- SmartTracking Custom Animations -->
+    <script th:src="@{/js/smarttracking-animations.js}"></script>
+</body>
+</html>

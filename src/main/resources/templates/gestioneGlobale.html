@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mappa Utenti e Dispositivi - SmartTracking</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- SortableJS per Drag & Drop fluido -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-700: #374151;
+            --gray-900: #111827;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-900);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar {
+            background: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--gray-700);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            background: var(--gray-100);
+            color: var(--primary);
+        }
+
+        .nav-links .btn-logout {
+            background: var(--danger);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .nav-links .btn-logout:hover {
+            background: #dc2626;
+        }
+
+        .app-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            height: calc(100vh - 72px); /* Altezza meno navbar */
+        }
+
+        /* --- SIDEBAR (Unassigned Devices) --- */
+        .sidebar-unassigned {
+            width: 300px;
+            background: #fff;
+            border-right: 1px solid var(--gray-200);
+            padding: 1.5rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.02);
+        }
+
+        .sidebar-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--gray-700);
+        }
+
+        .device-pool {
+            flex: 1;
+            background: var(--gray-50);
+            border: 2px dashed var(--gray-200);
+            border-radius: 12px;
+            padding: 1rem;
+            min-height: 200px;
+        }
+
+        /* --- MAIN CONTENT (Users Grid) --- */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            background: #f8fafc;
+            overflow-y: auto;
+        }
+
+        .users-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .user-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border-top: 6px solid transparent; /* Colore impostato inline */
+            transition: transform 0.2s;
+        }
+
+        .user-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+        }
+
+        .user-header {
+            padding: 1rem 1.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .user-name { font-weight: 700; font-size: 1.1rem; }
+        .user-role { font-size: 0.8rem; color: var(--gray-700); background: var(--gray-100); padding: 2px 8px; border-radius: 12px; }
+
+        .user-device-list {
+            padding: 1rem;
+            min-height: 120px;
+            flex: 1;
+        }
+
+        /* --- DRAGGABLE DEVICE CHIP --- */
+        .device-chip {
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            padding: 0.75rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: grab; /* Cursore mano */
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        /* Stile diverso se non sei admin (no drag) */
+        .no-drag .device-chip {
+            cursor: default;
+        }
+
+        .device-chip:active {
+            cursor: grabbing;
+        }
+
+        .device-icon {
+            width: 36px;
+            height: 36px;
+            background: #eff6ff;
+            color: #2563eb; /* Default color if unassigned */
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.75rem;
+            border: 1px solid transparent;
+            transition: color 0.3s, border-color 0.3s;
+        }
+
+        .device-info { flex: 1; }
+        .device-name { font-weight: 600; font-size: 0.9rem; margin-bottom: 2px; }
+        .device-id { font-size: 0.75rem; color: #64748b; font-family: monospace; }
+        
+        .device-actions a {
+            color: var(--gray-700);
+            padding: 4px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        .device-actions a:hover { background: var(--gray-100); color: var(--primary); }
+
+        /* Sortable ghost class */
+        .sortable-ghost {
+            opacity: 0.4;
+            background: #e2e8f0;
+            border: 2px dashed #94a3b8;
+        }
+        
+    </style>
+</head>
+<body th:classappend="${!isAdmin} ? 'no-drag'">
+
+<nav class="navbar">
+    <div class="navbar-brand">
+        <i class="fas fa-map-marked-alt"></i>
+        SmartTracking 
+        <span th:if="${isAdmin}" style="font-size: 0.8rem; background: var(--gray-100); color: var(--gray-600); padding: 2px 8px; border-radius: 12px; margin-left: 5px; border: 1px solid var(--gray-200);">Admin</span>
+    </div>
+    
+    <div class="nav-links">
+        
+        <a th:href="@{/dashboard}"><i class="fas fa-home"></i> Dashboard</a>
+        
+        <a th:href="@{/web/utenti-e-dispositivi}" style="background:var(--primary); color:white;">
+            <i class="fas fa-network-wired"></i> Utenti & Dispositivi
+        </a>
+
+        <!-- Link Gestione Utenti (Solo Admin) -->
+        <a th:if="${isAdmin}" th:href="@{/admin/users}" style="color:var(--gray-700);">
+            <i class="fas fa-users-cog"></i> Gestione Utenti
+        </a>
+
+        <a th:href="@{/profile}"><i class="fas fa-user"></i> Profilo</a>
+
+        <form th:action="@{/logout}" method="post" style="margin: 0;">
+            <button type="submit" class="btn-logout" style="border:none; cursor:pointer;">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </form>
+    </div>
+</nav>
+
+<div class="app-container">
+
+    <!-- SIDEBAR: UNASSIGNED DEVICES -->
+    <div class="sidebar-unassigned">
+        <div class="sidebar-title">
+            <i class="fas fa-box-open"></i> Non Assegnati
+        </div>
+        <div id="unassigned-pool" class="device-pool">
+            <!-- Loop dispositivi non assegnati -->
+            <div th:each="dev : ${unassignedDevices}" class="device-chip" th:data-id="${dev.id}">
+                <div class="device-icon" style="color: #64748b; background: #f1f5f9; border: 1px solid #cbd5e1;">
+                    <i class="fas fa-microchip"></i>
+                </div>
+                <div class="device-info">
+                    <div class="device-name" th:text="${dev.name}">Device Name</div>
+                    <div class="device-id" th:text="${dev.id}">ID</div>
+                </div>
+                <div class="device-actions">
+                    <a th:href="@{'/web/device-mock/' + ${dev.id}}"><i class="fas fa-eye"></i></a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-4 text-center">
+            <p class="small text-muted">Trascina i dispositivi da qui agli utenti per assegnarli.</p>
+        </div>
+    </div>
+
+    <!-- MAIN AREA: USERS GRID -->
+    <div class="main-content">
+        <div class="users-grid">
+            
+            <!-- Loop Utenti -->
+            <div th:each="user : ${usersList}" class="user-card" 
+                 th:style="'border-top-color: ' + ${user.color}">
+                
+                <div class="user-header" th:style="'background-color: ' + ${user.color} + '33'"> <!-- +33 per trasparenza -->
+                    <div class="user-name">
+                        <i class="fas fa-user-circle me-2"></i>
+                        <span th:text="${user.username}">Username</span>
+                    </div>
+                    <span class="user-role" th:text="${user.role}">Role</span>
+                </div>
+
+                <div class="user-device-list" th:id="'user-' + ${user.username}" th:data-color="${user.color}">
+                    <!-- Loop dispositivi assegnati all'utente -->
+                    <div th:each="dev : ${user.devices}" class="device-chip" th:data-id="${dev.id}">
+                        <div class="device-icon" th:style="'color: ' + ${user.color} + '; background: white; border: 1px solid ' + ${user.color}">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <div class="device-info">
+                            <div class="device-name" th:text="${dev.name}">Device</div>
+                            <div class="device-id" th:text="${dev.id}">ID</div>
+                        </div>
+                        <div class="device-actions">
+                            <a th:href="@{'/web/device-mock/' + ${dev.id}}"><i class="fas fa-eye"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<!-- Script per il Drag & Drop (Si attiva solo se isAdmin è true) -->
+<script th:if="${isAdmin}">
+    document.addEventListener('DOMContentLoaded', function () {
+        
+        // Funzione per aggiornare lo stile dell'icona
+        function updateIconStyle(itemEl, color) {
+            const icon = itemEl.querySelector('.device-icon');
+            if (color) {
+                // Assegnato a un utente
+                icon.style.color = color;
+                icon.style.background = 'white';
+                icon.style.borderColor = color;
+                // icon.innerHTML = '<i class="fas fa-mobile-alt"></i>'; // Opzionale: cambia icona
+            } else {
+                // Non assegnato (Pool)
+                icon.style.color = '#64748b';
+                icon.style.background = '#f1f5f9';
+                icon.style.borderColor = '#cbd5e1';
+                // icon.innerHTML = '<i class="fas fa-microchip"></i>'; // Opzionale: cambia icona
+            }
+        }
+
+        const sortableConfig = {
+            group: 'shared', // Permette lo scambio tra le liste
+            animation: 150,
+            ghostClass: 'sortable-ghost',
+            onEnd: function (evt) {
+                const itemEl = evt.item;  // elemento trascinato
+                const newTarget = evt.to; // nuova lista contenitore
+                
+                // --- UPDATE LOGIC ---
+                // Recupera il colore dal contenitore target (se esiste)
+                const targetColor = newTarget.getAttribute('data-color');
+                
+                // Aggiorna visivamente l'icona
+                updateIconStyle(itemEl, targetColor);
+
+                // Qui dovremmo chiamare il backend per salvare la modifica
+                const deviceId = itemEl.getAttribute('data-id');
+                const targetId = newTarget.id; 
+                console.log(`Spostato device ${deviceId} in ${targetId} con colore ${targetColor}`);
+            }
+        };
+
+        // 1. Rendi "sortable" il pool dei non assegnati
+        new Sortable(document.getElementById('unassigned-pool'), sortableConfig);
+
+        // 2. Rendi "sortable" tutte le liste degli utenti
+        const userLists = document.querySelectorAll('.user-device-list');
+        userLists.forEach(list => {
+            new Sortable(list, sortableConfig);
+        });
+
+    });
+</script>
+
+</body>
+</html>

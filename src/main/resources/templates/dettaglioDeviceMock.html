@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dettaglio Dispositivo - SmartTracking</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-700: #374151;
+            --gray-900: #111827;
+            --success: #22c55e;
+            --danger: #ef4444;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-900);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 450px;
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .back-link {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--gray-700);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .back-link:hover { color: var(--primary); }
+
+        .device-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            margin-top: 1rem;
+        }
+
+        .device-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            background: #eff6ff;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+
+        h1 { margin: 0; font-size: 1.5rem; font-weight: 700; }
+        .device-id { color: #64748b; font-family: monospace; font-size: 1rem; margin-top: 5px; }
+
+        /* --- CONTROLS --- */
+        .control-group {
+            margin-bottom: 1.5rem;
+            background: var(--gray-50);
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .control-group.disabled-layer {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        
+        .control-label {
+            font-weight: 600;
+            display: flex;
+            flex-direction: column;
+        }
+        .control-desc {
+            font-size: 0.8rem;
+            color: var(--gray-700);
+            font-weight: 400;
+        }
+
+        /* TOGGLE SWITCH STYLE (iOS style) */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 28px;
+        }
+
+        .switch input { 
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        input:checked + .slider {
+            background-color: var(--success);
+        }
+        
+        /* Red color for Block switch */
+        input.danger-switch:checked + .slider {
+            background-color: var(--danger);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(22px);
+        }
+
+        /* --- OUTPUT AREA --- */
+        .mac-display {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #1e293b;
+            color: #4ade80;
+            font-family: monospace;
+            text-align: center;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            display: none; /* Hidden by default */
+        }
+
+        .mac-display.visible {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* BLOCKED STATE OVERLAY */
+        .blocked-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255,255,255,0.8);
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 10;
+            display: none;
+            backdrop-filter: blur(2px);
+        }
+        .blocked-badge {
+            background: var(--danger);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 10px rgba(239, 68, 68, 0.4);
+        }
+
+        .btn-provision { background: var(--primary); color: white; }
+        .btn-remove { background: var(--danger); color: white; }
+        .btn-block { background: var(--warning); color: #1f2937; }
+        .btn-back { background: transparent; color: #6b7280; margin-top: 1rem; }
+
+    </style>
+</head>
+<body>
+
+<div class="container" id="mainContainer">
+    <a th:href="@{/web/utenti-e-dispositivi}" class="back-link"><i class="fas fa-arrow-left"></i> Indietro</a>
+
+    <div class="device-header">
+        <div class="device-icon">
+            <i class="fas fa-mobile-alt"></i>
+        </div>
+        <h1 th:text="${device.name}">Nome Device</h1>
+        <div class="device-id" th:text="${device.id}">ID</div>
+        <div class="mt-2">
+            <span class="badge bg-light text-dark border" th:text="${device.status}">Stato</span>
+        </div>
+    </div>
+
+    <!-- ADMIN CONTROLS -->
+    <div th:if="${isAdmin}">
+        
+        <!-- PROVISIONING TOGGLE -->
+        <div class="control-group" id="provisionGroup" th:style="${device.provisioned} ? 'background: #dcfce7; border-color: #22c55e;' : ''">
+            <div class="control-label">
+                Provisioning
+                <span class="control-desc">Genera MAC e assegna</span>
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="provisionSwitch" th:checked="${device.provisioned}">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <!-- MAC ADDRESS DISPLAY -->
+        <div id="macOutput" class="mac-display" th:classappend="${device.provisioned} ? 'visible' : ''">
+            MAC: <span id="macValue" th:text="${device.macAddress != null} ? ${device.macAddress} : '--:--:--:--:--:--'">--:--:--:--:--:--</span>
+        </div>
+
+        <!-- PRIVATE KEY DISPLAY -->
+        <div id="keyOutput" class="mac-display" style="background: #312e81; color: #a5b4fc; word-break: break-all; font-size: 0.9rem;">
+            <div><i class="fas fa-key"></i> CHIAVE PRIVATA (Salva ora!)</div>
+            <div id="privateKeyValue" style="margin-top: 5px; font-family: monospace;"></div>
+        </div>
+
+        <!-- BLOCK TOGGLE 
+        <div class="control-group mt-3" style="border-color: #ef444433;">
+            <div class="control-label">
+                Blocca Dispositivo
+                <span class="control-desc text-danger">Impedisce l'accesso</span>
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="blockSwitch" class="danger-switch">
+                <span class="slider"></span>
+            </label>
+        </div>
+        -->
+
+    </div>
+
+    <div th:unless="${isAdmin}" class="text-center text-muted">
+        <p><i class="fas fa-lock"></i> Solo gli amministratori possono modificare questo dispositivo.</p>
+    </div>
+
+    <!-- BLOCKED OVERLAY -->
+    <div class="blocked-overlay" id="blockedOverlay">
+        <div class="blocked-badge"><i class="fas fa-ban"></i> BLOCCATO</div>
+        <button class="btn btn-sm btn-outline-danger mt-3" onclick="unblockDevice()">Sblocca</button>
+    </div>
+
+</div>
+
+<script th:if="${isAdmin}">
+    const provisionSwitch = document.getElementById('provisionSwitch');
+    const macOutput = document.getElementById('macOutput');
+    const macValue = document.getElementById('macValue');
+    const provisionGroup = document.getElementById('provisionGroup');
+    
+    const blockSwitch = document.getElementById('blockSwitch');
+    const blockedOverlay = document.getElementById('blockedOverlay');
+    const mainContainer = document.getElementById('mainContainer');
+
+    // --- PROVISIONING LOGIC ---
+    provisionSwitch.addEventListener('change', function() {
+        const isProvisioned = this.checked;
+        let mac = macValue.innerText;
+
+        if (isProvisioned) {
+            // Generate Random MAC only if invalid
+            if (mac === '--:--:--:--:--:--' || !mac) {
+                 mac = "XX:XX:XX:XX:XX:XX".replace(/X/g, function() {
+                    return "0123456789ABCDEF".charAt(Math.floor(Math.random() * 16));
+                 });
+            }
+            
+            macValue.textContent = mac;
+            macOutput.classList.add('visible');
+            
+            // Visual feedback on group
+            provisionGroup.style.background = '#dcfce7'; // Light green
+            provisionGroup.style.borderColor = '#22c55e';
+            
+        } else {
+            macOutput.classList.remove('visible');
+            // macValue.textContent = '--:--:--:--:--:--'; // Optional: keep MAC in UI but hide it
+            
+            provisionGroup.style.background = 'var(--gray-50)';
+            provisionGroup.style.borderColor = 'transparent';
+        }
+
+        // AJAX CALL to update server state
+        const deviceId = "[[${device.id}]]";
+        const formData = new FormData();
+        formData.append('provisioned', isProvisioned);
+        if (isProvisioned) formData.append('mac', mac);
+
+        fetch(`/web/device-mock/${deviceId}/provision`, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('State updated', data);
+            const keyOut = document.getElementById('keyOutput');
+            const keyVal = document.getElementById('privateKeyValue');
+            
+            if (data.status === 'OK' && data.privateKey) {
+                keyVal.innerText = data.privateKey;
+                keyOut.classList.add('visible');
+            } else {
+                if(!isProvisioned) {
+                    keyOut.classList.remove('visible');
+                    keyVal.innerText = '';
+                }
+            }
+        })
+        .catch(err => console.error(err));
+    });
+
+    // --- BLOCK LOGIC ---
+    blockSwitch.addEventListener('change', function() {
+        if (this.checked) {
+            // Show Overlay
+            blockedOverlay.style.display = 'flex';
+            // Disable interactions behind
+            provisionSwitch.disabled = true;
+        } else {
+            // Hide Overlay
+            blockedOverlay.style.display = 'none';
+            provisionSwitch.disabled = false;
+        }
+    });
+
+    // Helper for the overlay button
+    window.unblockDevice = function() {
+        blockSwitch.checked = false;
+        blockSwitch.dispatchEvent(new Event('change'));
+    }
+
+</script>
+
+</body>
+</html>

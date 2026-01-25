@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifica Utente - SmartTracking</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/smarttracking-design-system.css}">
+    <style>
+        /* Page-specific styles adapted for Admin Edit */
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary) 0%, #1e40af 100%);
+            padding: var(--spacing-xl) var(--spacing-md);
+        }
+
+        .register-container {
+            background: white;
+            border-radius: var(--radius-xl);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 700px;
+            overflow: hidden;
+            animation: fadeIn 0.4s ease-out;
+            margin: var(--spacing-xl) 0;
+        }
+
+        .register-header {
+            background: linear-gradient(135deg, var(--primary) 0%, #1e40af 100%);
+            color: white;
+            padding: var(--spacing-xl) var(--spacing-xl);
+            text-align: center;
+        }
+
+        .register-header i {
+            font-size: 2.5rem;
+            margin-bottom: var(--spacing-md);
+            display: block;
+        }
+
+        .register-header h1 {
+            color: white;
+            font-size: 1.75rem;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .register-body {
+            padding: var(--spacing-2xl) var(--spacing-xl);
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-lg);
+        }
+
+        .form-grid .form-group-full {
+            grid-column: 1 / -1;
+        }
+
+        .form-input-icon {
+            position: relative;
+        }
+
+        .form-input-icon i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-400);
+        }
+
+        .form-input-icon input,
+        .form-input-icon select {
+            padding-left: 3rem;
+        }
+
+        .section-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin: var(--spacing-xl) 0 var(--spacing-lg);
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 2px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+        
+        .section-title:first-child { margin-top: 0; }
+        .section-title i { color: var(--primary); }
+
+        .register-footer {
+            padding: var(--spacing-lg) var(--spacing-xl);
+            background: var(--gray-50);
+            text-align: center;
+            border-top: 1px solid var(--gray-200);
+        }
+    </style>
+</head>
+<body>
+
+<div class="register-container">
+    <div class="register-header">
+        <i class="fas fa-user-edit"></i>
+        <h1>Modifica Utente</h1>
+        <p>Aggiorna le informazioni dell'utente</p>
+    </div>
+
+    <form th:action="@{/admin/users/update}" th:object="${userEditDTO}" method="post">
+        
+        <div class="register-body">
+
+            <!-- Error Global Message -->
+            <div th:if="${errorMessage}" class="alert alert-danger mb-4" role="alert">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                <span th:text="${errorMessage}">Errore</span>
+            </div>
+
+            <div class="section-title">
+                <i class="fas fa-id-card"></i> Credenziali
+            </div>
+
+            <div class="form-grid">
+                <!-- Username (Read Only) -->
+                <div class="form-group form-group-full">
+                    <label for="username" class="form-label">Username</label>
+                    <div class="form-input-icon">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="username" class="form-input" th:field="*{username}" readonly style="background-color: var(--gray-100); cursor: not-allowed;">
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div class="form-group form-group-full">
+                    <label for="email" class="form-label">Email</label>
+                    <div class="form-input-icon">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="email" class="form-input" th:field="*{email}" placeholder="esempio@email.com">
+                    </div>
+                    <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="form-error">Errore Email</div>
+                </div>
+
+                <!-- Password (Optional) -->
+                <div class="form-group form-group-full">
+                    <label for="password" class="form-label">Nuova Password (opzionale)</label>
+                    <div class="form-input-icon">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" class="form-input" th:field="*{password}" placeholder="Lascia vuoto per non modificare">
+                    </div>
+                    <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="form-error">Errore Password</div>
+                </div>
+            </div>
+
+            <div class="section-title">
+                <i class="fas fa-user-circle"></i> Informazioni Personali
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="firstname" class="form-label">Nome</label>
+                    <div class="form-input-icon">
+                        <i class="fas fa-heading"></i>
+                        <input type="text" id="firstname" class="form-input" th:field="*{firstname}">
+                    </div>
+                     <div th:if="${#fields.hasErrors('firstname')}" th:errors="*{firstname}" class="form-error">Errore Nome</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="lastname" class="form-label">Cognome</label>
+                    <div class="form-input-icon">
+                        <i class="fas fa-heading"></i>
+                        <input type="text" id="lastname" class="form-input" th:field="*{lastname}">
+                    </div>
+                     <div th:if="${#fields.hasErrors('lastname')}" th:errors="*{lastname}" class="form-error">Errore Cognome</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="gender" class="form-label">Genere</label>
+                    <div class="form-input-icon">
+                        <i class="fas fa-venus-mars"></i>
+                        <select id="gender" class="form-select" th:field="*{gender}">
+                            <option value="MALE">Maschio</option>
+                            <option value="FEMALE">Femmina</option>
+                            <option value="OTHER">Altro</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="taxIdentificationNumber" class="form-label">Codice Fiscale</label>
+                    <div class="form-input-icon">
+                        <i class="fas fa-id-card-alt"></i>
+                        <input type="text" id="taxIdentificationNumber" class="form-input" th:field="*{taxIdentificationNumber}">
+                    </div>
+                     <div th:if="${#fields.hasErrors('taxIdentificationNumber')}" th:errors="*{taxIdentificationNumber}" class="form-error">Errore CF</div>
+                </div>
+            </div>
+
+            <div class="section-title">
+                <i class="fas fa-map-marker-alt"></i> Indirizzo e Contatti
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group form-group-full">
+                    <label for="address" class="form-label">Indirizzo</label>
+                    <div class="form-input-icon">
+                        <i class="fas fa-home"></i>
+                        <input type="text" id="address" class="form-input" th:field="*{address}">
+                    </div>
+                     <div th:if="${#fields.hasErrors('address')}" th:errors="*{address}" class="form-error">Errore Indirizzo</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="city" class="form-label">Città</label>
+                    <div class="form-input-icon">
+                        <i class="fas fa-city"></i>
+                        <input type="text" id="city" class="form-input" th:field="*{city}">
+                    </div>
+                     <div th:if="${#fields.hasErrors('city')}" th:errors="*{city}" class="form-error">Errore Città</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="telephoneNumber" class="form-label">Telefono</label>
+                    <div class="form-input-icon">
+                        <i class="fas fa-phone"></i>
+                        <input type="text" id="telephoneNumber" class="form-input" th:field="*{telephoneNumber}">
+                    </div>
+                     <div th:if="${#fields.hasErrors('telephoneNumber')}" th:errors="*{telephoneNumber}" class="form-error">Errore Telefono</div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 mt-4">AGGIORNA UTENTE</button>
+        </div>
+        
+    </form>
+
+    <div class="register-footer">
+        <a th:href="@{/admin/users}">Torna alla lista utenti</a>
+    </div>
+</div>
+
+</body>
+</html>

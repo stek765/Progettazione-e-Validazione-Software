@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartTracking - Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/smarttracking-design-system.css}">
+    <style>
+        /* Page-specific styles */
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            padding: var(--spacing-xl);
+        }
+
+        .login-container {
+            background: white;
+            border-radius: var(--radius-xl);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 450px;
+            overflow: hidden;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .login-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: var(--spacing-2xl) var(--spacing-xl);
+            text-align: center;
+        }
+
+        .login-header i {
+            font-size: 3rem;
+            margin-bottom: var(--spacing-md);
+            display: block;
+        }
+
+        .login-header h1 {
+            color: white;
+            font-size: 2rem;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .login-header p {
+            opacity: 0.9;
+            font-size: 0.95rem;
+            margin-bottom: 0;
+        }
+
+        .login-body {
+            padding: var(--spacing-2xl) var(--spacing-xl);
+        }
+
+        .form-input-icon {
+            position: relative;
+        }
+
+        .form-input-icon i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-400);
+        }
+
+        .form-input-icon input {
+            padding-left: 3rem;
+        }
+
+        .login-footer {
+            padding: var(--spacing-lg) var(--spacing-xl);
+            background: var(--gray-50);
+            text-align: center;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .login-footer a {
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .login-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: var(--spacing-lg) 0;
+            color: var(--gray-500);
+            font-size: 0.875rem;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid var(--gray-300);
+        }
+
+        .divider span {
+            padding: 0 var(--spacing-md);
+        }
+
+        /* Error animation */
+        .form-group.error .form-input {
+            border-color: var(--danger);
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @media (max-width: 500px) {
+            .login-container {
+                margin: var(--spacing-md);
+            }
+
+            .login-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .login-body {
+                padding: var(--spacing-lg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- HEADER -->
+        <div class="login-header">
+            <i class="fas fa-map-marked-alt"></i>
+            <h1>SmartTracking</h1>
+            <p>Accedi al tuo account</p>
+        </div>
+
+        <!-- BODY -->
+        <div class="login-body">
+            <!-- Success Message -->
+            <div th:if="${successMessage}" class="alert alert-success animate-slide-in">
+                <i class="fas fa-check-circle"></i>
+                <span th:text="${successMessage}"></span>
+            </div>
+
+            <!-- Error Message -->
+            <div th:if="${errorMessage}" class="alert alert-error animate-shake">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span th:text="${errorMessage}"></span>
+            </div>
+
+            <!-- LOGIN FORM -->
+            <form th:action="@{/signIn}" method="post" id="loginForm">
+                <!-- Username -->
+                <div class="form-group" th:classappend="${errorMessage != null} ? 'error' : ''">
+                    <label class="form-label" for="username">
+                        <i class="fas fa-user"></i> Username
+                    </label>
+                    <div class="form-input-icon">
+                        <i class="fas fa-user"></i>
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            class="form-input"
+                            placeholder="Inserisci il tuo username"
+                            required
+                            autofocus>
+                    </div>
+                </div>
+
+                <!-- Password -->
+                <div class="form-group" th:classappend="${errorMessage != null} ? 'error' : ''">
+                    <label class="form-label" for="password">
+                        <i class="fas fa-lock"></i> Password
+                    </label>
+                    <div class="form-input-icon">
+                        <i class="fas fa-lock"></i>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            class="form-input"
+                            placeholder="Inserisci la tua password"
+                            required>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary btn-full btn-large">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Accedi
+                </button>
+            </form>
+
+            <!-- Divider -->
+            <div class="divider">
+                <span>oppure</span>
+            </div>
+
+            <!-- Register Link Button -->
+            <a th:href="@{/signUp}" class="btn btn-outline btn-full">
+                <i class="fas fa-user-plus"></i>
+                Crea un nuovo account
+            </a>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="login-footer">
+            <p class="text-small text-muted">
+                <i class="fas fa-shield-alt"></i>
+                Accesso sicuro e protetto
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Add animation on form submit
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            const btn = this.querySelector('button[type="submit"]');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Accesso in corso...';
+            btn.disabled = true;
+        });
+
+        // Auto-hide success message after 5 seconds
+        const successAlert = document.querySelector('.alert-success');
+        if (successAlert) {
+            setTimeout(() => {
+                successAlert.style.opacity = '0';
+                successAlert.style.transform = 'translateX(20px)';
+                setTimeout(() => successAlert.remove(), 300);
+            }, 5000);
+        }
+    </script>
+
+    <!-- Anime.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <!-- SmartTracking Custom Animations -->
+    <script th:src="@{/js/smarttracking-animations.js}"></script>
+</body>
+</html>

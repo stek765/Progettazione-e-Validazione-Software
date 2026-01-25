@@ -1,0 +1,73 @@
+<!-- src/main/resources/templates/error.html -->
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+    <title>Errore</title>
+    <style>
+        body {
+            font-family: system-ui, Arial, sans-serif;
+            margin: 24px;
+        }
+
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 16px;
+            max-width: 720px;
+        }
+
+        .title {
+            margin: 0 0 8px;
+        }
+
+        .code {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            margin: 0 0 12px;
+        }
+
+        .msg {
+            white-space: pre-wrap;
+        }
+
+        .actions {
+            margin-top: 16px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            text-decoration: none;
+            color: inherit;
+        }
+    </style>
+</head>
+
+<body>
+<div class="card">
+    <h1 class="title">Si è verificato un errore</h1>
+
+    <!-- messaggio “user-friendly” (impostato dal controller) -->
+    <p class="msg" th:if="${message}" th:text="${message}">Errore generico.</p>
+
+    <!-- dettagli opzionali -->
+    <p class="code" th:if="${path}">
+        <b>Path:</b> <span th:text="${path}">/</span>
+    </p>
+    <p class="code" th:if="${status}">
+        <b>Status:</b> <span th:text="${status}">500</span>
+    </p>
+
+    <div class="actions">
+        <a class="btn" th:href="@{/}">Home</a>
+    </div>
+</div>
+</body>
+</html>
