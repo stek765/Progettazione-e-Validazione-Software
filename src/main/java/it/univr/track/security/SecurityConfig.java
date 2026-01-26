@@ -24,10 +24,13 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
                         .requestMatchers("/", "/signIn", "/signUp", "/error").permitAll()
+                        // API endpoints that should be public
+                        .requestMatchers("/api/register", "/api/devices/provision", "/api/device/login").permitAll()
                         // Ensure admin paths are protected
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
                         // Ensure authenticated access
                         .requestMatchers("/web/**").authenticated()
+                        .requestMatchers("/api/**").authenticated()
                         .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/signIn")
@@ -39,7 +42,7 @@ public class SecurityConfig {
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/signIn?logout=true")
                         .permitAll())
-                // .httpBasic(Customizer.withDefaults()) // Removed to prevent browser popup
+                .httpBasic(Customizer.withDefaults()) // Enabled for API testing
                 .csrf(AbstractHttpConfigurer::disable)
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
 

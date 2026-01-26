@@ -19,10 +19,14 @@ public class Device extends AbstractEntity {
     @Setter
     private DeviceStatus status;
 
+    @ManyToOne
+    private UserRegistered user;
+
     @Builder
-    public Device(String name, DeviceStatus status) {
+    public Device(String name, DeviceStatus status, UserRegistered user) {
         this.name = name;
         this.status = status;
+        this.user = user;
     }
 
 }
