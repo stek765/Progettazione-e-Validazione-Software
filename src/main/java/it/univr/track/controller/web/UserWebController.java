@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Collections;
+
 @Controller
 @Profile("gestione-utenti")
 public class UserWebController {
@@ -54,24 +56,15 @@ public class UserWebController {
                     .anyMatch(a -> a.getAuthority().equals("ADMIN"));
         }
 
-        // TODO: Implementare logica reale quando le entità saranno collegate
         long activeDevicesCount = 0;
-        long activeShipmentsCount = 0;
-        long completedShipmentsCount = 0;
         long alertsCount = 0;
 
         model.addAttribute("activeDevicesCount", activeDevicesCount);
-        model.addAttribute("activeShipmentsCount", activeShipmentsCount);
-        model.addAttribute("completedShipmentsCount", completedShipmentsCount);
         model.addAttribute("alertsCount", alertsCount);
         model.addAttribute("username", username);
         model.addAttribute("isAdmin", isAdmin);
-        // model.addAttribute("shipments", ...) // Rimosso come richiesto
-
         return "dashboard";
     }
-
-    // Registrazione di un nuovo utente
 
     /**
      * Richiama la pagina signUp.html per visualizzare il form di registrazione.

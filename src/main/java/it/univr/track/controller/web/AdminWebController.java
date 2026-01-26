@@ -18,7 +18,8 @@ import java.util.*;
 public class AdminWebController {
 
     // --- MOCK DATA PERSISTENCE ---
-    // Mappa username -> Lista Device (così persiste anche se ricarichiamo gli utenti dal DB)
+    // Mappa username -> Lista Device (così persiste anche se ricarichiamo gli
+    // utenti dal DB)
     private static Map<String, List<MockDevice>> userDevicesMap = new HashMap<>();
     private static List<MockDevice> unassignedDevices = new ArrayList<>();
 
@@ -32,7 +33,7 @@ public class AdminWebController {
     private UserRepository userRepository;
 
     @GetMapping("/utenti-e-dispositivi")
-    public String gestioneGlobale(Model model, Authentication authentication) {
+    public String deviceAndUsers(Model model, Authentication authentication) {
 
         List<UserViewModel> usersList = new ArrayList<>();
         List<UserRegistered> dbUsers = new ArrayList<>();
@@ -63,11 +64,11 @@ public class AdminWebController {
         }
         model.addAttribute("isAdmin", isAdmin);
 
-        return "gestioneGlobale";
+        return "deviceAndUsers";
     }
 
     @GetMapping("/device-mock/{id}")
-    public String dettaglioDeviceMock(@PathVariable("id") String id, Model model, Authentication authentication) {
+    public String deviceProvisioning(@PathVariable("id") String id, Model model, Authentication authentication) {
         // Find device in lists
         MockDevice device = findDeviceById(id);
 
@@ -84,15 +85,15 @@ public class AdminWebController {
         }
         model.addAttribute("isAdmin", isAdmin);
 
-        return "dettaglioDeviceMock";
+        return "deviceProvisioning";
     }
 
     // Endpoint for AJAX
     @PostMapping("/device-mock/{id}/provision")
     @ResponseBody
     public Map<String, String> toggleProvision(@PathVariable("id") String id,
-                                               @RequestParam("provisioned") boolean provisioned,
-                                               @RequestParam(value = "mac", required = false) String mac) {
+            @RequestParam("provisioned") boolean provisioned,
+            @RequestParam(value = "mac", required = false) String mac) {
 
         Map<String, String> response = new HashMap<>();
         MockDevice device = findDeviceById(id);
@@ -136,12 +137,14 @@ public class AdminWebController {
         // Cerca nella mappa
         for (List<MockDevice> list : userDevicesMap.values()) {
             for (MockDevice d : list) {
-                if (d.id.equals(id)) return d;
+                if (d.id.equals(id))
+                    return d;
             }
         }
         // Cerca nei non assegnati
         for (MockDevice d : unassignedDevices) {
-            if (d.id.equals(id)) return d;
+            if (d.id.equals(id))
+                return d;
         }
         return null;
     }

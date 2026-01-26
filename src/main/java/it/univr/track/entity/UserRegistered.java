@@ -15,7 +15,6 @@ import java.time.Instant;
 import java.util.Locale;
 
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @NoArgsConstructor
 @Getter
 @Setter
@@ -39,9 +38,9 @@ public class UserRegistered extends AbstractEntity {
     private int failedLoginAttempts;
     private Instant lockedUntil;
 
-
     @Builder
-    public UserRegistered(String firstname, String lastname, String username, String password, String email, Role role, Gender gender, String city, String address, String telephoneNumber, String taxIdentificationNumber) {
+    public UserRegistered(String firstname, String lastname, String username, String password, String email, Role role,
+            Gender gender, String city, String address, String telephoneNumber, String taxIdentificationNumber) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.username = username;
@@ -67,26 +66,25 @@ public class UserRegistered extends AbstractEntity {
         }
     }
 
-
     public void setEmail(String mail) {
         this.email = mail.trim().toLowerCase(Locale.ROOT);
     }
+
     public void setFirstName(String firstname) {
         this.firstname = firstname;
     }
+
     public void setLastName(String lastname) {
         this.lastname = lastname;
     }
 
-
-
     public String getFirstName() {
         return firstname;
     }
+
     public String getLastName() {
         return lastname;
     }
-
 
     public void setFirstname(@NotBlank(message = "Nome obbligatorio") String firstname) {
         this.firstname = firstname;
@@ -99,6 +97,7 @@ public class UserRegistered extends AbstractEntity {
     public @NotBlank(message = "Nome obbligatorio") String getFirstname() {
         return firstname;
     }
+
     public @NotBlank(message = "Cognome obbligatorio") String getLastname() {
         return lastname;
     }

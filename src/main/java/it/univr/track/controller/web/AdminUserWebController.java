@@ -31,11 +31,12 @@ public class AdminUserWebController {
     @GetMapping("/users")
     public String listUsers(Model model) {
         model.addAttribute("users", userRepository.findAll());
-        return "userListAdministration";
+        return "usersManagmentAdmin";
     }
 
     @PostMapping("/users/delete")
-    public String deleteUser(@RequestParam("usernameToDelete") String username, Principal principal, RedirectAttributes redirectAttributes) {
+    public String deleteUser(@RequestParam("usernameToDelete") String username, Principal principal,
+            RedirectAttributes redirectAttributes) {
         if (principal != null && principal.getName().equals(username)) {
             redirectAttributes.addFlashAttribute("errorMessage", "Non puoi eliminare il tuo stesso account.");
             return "redirect:/admin/users";
@@ -58,9 +59,9 @@ public class AdminUserWebController {
 
     @PostMapping("/users/register")
     public String registerUser(@Valid @ModelAttribute("userRegistrationDTO") UserRegistrationDTO dto,
-                               BindingResult result,
-                               Model model,
-                               RedirectAttributes redirectAttributes) {
+            BindingResult result,
+            Model model,
+            RedirectAttributes redirectAttributes) {
 
         if (result.hasErrors()) {
             model.addAttribute("formAction", "/admin/users/register");
@@ -120,9 +121,8 @@ public class AdminUserWebController {
 
     @PostMapping("/users/update")
     public String updateUser(@Valid @ModelAttribute("userEditDTO") UserEditDTO dto,
-                             BindingResult result,
-                             RedirectAttributes redirectAttributes) {
-
+            BindingResult result,
+            RedirectAttributes redirectAttributes) {
 
         if (result.hasErrors()) {
             return "editUserAdmin";

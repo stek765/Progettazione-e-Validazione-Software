@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="it" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -37,7 +38,7 @@
         /* NAVBAR */
         .navbar {
             background: white;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
@@ -124,7 +125,7 @@
             background: white;
             border-radius: 12px;
             padding: 1.5rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
             display: flex;
             align-items: center;
             gap: 1rem;
@@ -133,7 +134,7 @@
 
         .stat-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
         }
 
         .stat-icon {
@@ -147,10 +148,25 @@
             flex-shrink: 0;
         }
 
-        .stat-icon.devices { background: #dbeafe; color: var(--primary); }
-        .stat-icon.shipments { background: #d1fae5; color: var(--success); }
-        .stat-icon.data { background: #fef3c7; color: var(--warning); }
-        .stat-icon.alerts { background: #fee2e2; color: var(--danger); }
+        .stat-icon.devices {
+            background: #dbeafe;
+            color: var(--primary);
+        }
+
+        .stat-icon.shipments {
+            background: #d1fae5;
+            color: var(--success);
+        }
+
+        .stat-icon.data {
+            background: #fef3c7;
+            color: var(--warning);
+        }
+
+        .stat-icon.alerts {
+            background: #fee2e2;
+            color: var(--danger);
+        }
 
         .stat-content {
             flex: 1;
@@ -177,8 +193,15 @@
             margin-top: 0.25rem;
         }
 
-        .badge-success { background: #d1fae5; color: #065f46; }
-        .badge-warning { background: #fef3c7; color: #92400e; }
+        .badge-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
 
         /* QUICK ACTIONS */
         .section-title {
@@ -200,7 +223,7 @@
             border-radius: 12px;
             padding: 2rem;
             text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
             transition: all 0.2s;
             text-decoration: none;
             color: inherit;
@@ -209,7 +232,7 @@
 
         .action-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
             border-color: var(--primary);
         }
 
@@ -218,9 +241,17 @@
             margin-bottom: 1rem;
         }
 
-        .action-card:nth-child(1) .action-icon { color: var(--success); }
-        .action-card:nth-child(2) .action-icon { color: var(--info); }
-        .action-card:nth-child(3) .action-icon { color: var(--warning); }
+        .action-card:nth-child(1) .action-icon {
+            color: var(--success);
+        }
+
+        .action-card:nth-child(2) .action-icon {
+            color: var(--info);
+        }
+
+        .action-card:nth-child(3) .action-icon {
+            color: var(--warning);
+        }
 
         .action-card h3 {
             font-size: 1.25rem;
@@ -239,7 +270,7 @@
             background: white;
             border-radius: 12px;
             padding: 2rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
 
         .table-container {
@@ -287,10 +318,25 @@
             text-transform: uppercase;
         }
 
-        .badge-planned { background: #fef3c7; color: #92400e; }
-        .badge-in_transit { background: #dbeafe; color: #1e40af; }
-        .badge-delivered { background: #d1fae5; color: #065f46; }
-        .badge-cancelled { background: #e5e7eb; color: #6b7280; }
+        .badge-planned {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-in_transit {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-delivered {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-cancelled {
+            background: #e5e7eb;
+            color: #6b7280;
+        }
 
         .btn-view {
             padding: 0.5rem 1rem;
@@ -344,6 +390,7 @@
         }
     </style>
 </head>
+
 <body>
     <!-- NAVBAR -->
     <nav class="navbar">
@@ -352,8 +399,9 @@
             SmartTracking
         </div>
         <div class="nav-links">
-            <a th:href="@{/dashboard}" style="background:var(--primary); color:white;"><i class="fas fa-home"></i> Dashboard</a>
-            
+            <a th:href="@{/dashboard}" style="background:var(--primary); color:white;"><i class="fas fa-home"></i>
+                Dashboard</a>
+
             <!-- Link Monitoraggio visibile a tutti -->
             <a th:href="@{/web/utenti-e-dispositivi}" style="color:var(--gray-700);">
                 <i class="fas fa-network-wired"></i> Utenti & Dispositivi
@@ -364,7 +412,6 @@
                 <i class="fas fa-users-cog"></i> Gestione Utenti
             </a>
 
-            <!-- <a th:href="@{/devices}"><i class="fas fa-microchip"></i> Dispositivi</a> -->
             <a th:href="@{/profile}"><i class="fas fa-user"></i> Profilo</a>
 
 
@@ -385,7 +432,7 @@
             <p>Panoramica completa delle tue spedizioni e dispositivi</p>
         </div>
 
-        
+
         <!-- QUICK ACTIONS -->
         <h2 class="section-title">Azioni Rapide</h2>
         <div class="quick-actions">
@@ -415,7 +462,7 @@
         </div>
 
         <!-- RECENT SHIPMENTS (Removed) -->
-        
+
     </div>
 
     <!-- Anime.js Library -->
@@ -423,4 +470,5 @@
     <!-- SmartTracking Custom Animations -->
     <script th:src="@{/js/smarttracking-animations.js}"></script>
 </body>
+
 </html>

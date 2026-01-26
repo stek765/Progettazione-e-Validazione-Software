@@ -38,21 +38,66 @@ class AcceptanceApiTest {
                 .header("Location", containsString("dashboard"));
     }
 
+    // --- DEVICE API TESTS ---
+
     @Test
     void testApiAddDevice() {
-        // Authenticate (need valid session usually, or basic auth)
-        // Assuming DeviceController.addDevice returns boolean true
-        // And it's protected.
-
+        // Verifica API per aggiungere un dispositivo (POST)
         given()
-                .auth().preemptive().basic("admin", "password") // Start with Basic, falls back to Form usu.
+                .auth().preemptive().basic("admin", "password")
+                .contentType(ContentType.JSON)
                 .when()
                 .post("/api/device")
                 .then()
-                // Depending on CSRF config this might fail with 403 if not handled.
-                // For this test, verifying 401/403 (Protected) vs 200 (Open) is a check.
-                // If protected: 401/403. If logic works: 200.
-                // DeviceController mock returns true.
-                .statusCode(anyOf(is(200), is(401), is(403)));
+                // Status 200 (se ritorna boolean true) o 201 Created
+                .statusCode(anyOf(is(200), is(201)));
+    }
+
+    @Test
+    void testApiGetDevice() {
+        // Verifica API per leggere la configurazione di un dispositivo (GET)
+        given()
+                .auth().preemptive().basic("admin", "password")
+                .when()
+                .get("/api/device/1") // ID arbitrario
+                .then()
+                .statusCode(200)
+                .contentType(ContentType.JSON);
+    }
+
+    @Test
+    void testApiUpdateDevice() {
+        // Verifica API per aggiornare un dispositivo (PUT)
+        given()
+                .auth().preemptive().basic("admin", "password")
+                .contentType(ContentType.JSON)
+                .when()
+                .put("/api/device")
+                .then()
+                .statusCode(200);
+    }
+
+    @Test
+    void testApiDeleteDevice() {
+        // Verifica API per dismettere un dispositivo (DELETE)
+        given()
+                .auth().preemptive().basic("admin", "password")
+                .when()
+                .delete("/api/device")
+                .then()
+                .statusCode(200);
+    }
+
+    @Test
+    void testApiGetAllDevices() {
+        // Verifica API per listare i dispositivi
+        given()
+                .auth().preemptive().basic("admin", "password")
+                .when()
+                .get("/api/devices")
+                .then()
+                .statusCode(200)
+                .contentType(ContentType.JSON)
+                .body("$", hasSize(greaterThanOrEqualTo(0)));
     }
 }

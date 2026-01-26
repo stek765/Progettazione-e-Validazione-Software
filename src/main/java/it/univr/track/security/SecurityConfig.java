@@ -39,7 +39,7 @@ public class SecurityConfig {
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/signIn?logout=true")
                         .permitAll())
-                .httpBasic(Customizer.withDefaults()) // Enable Basic Auth for API tests
+                // .httpBasic(Customizer.withDefaults()) // Removed to prevent browser popup
                 .csrf(AbstractHttpConfigurer::disable)
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
 
