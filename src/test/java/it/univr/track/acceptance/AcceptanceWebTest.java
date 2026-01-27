@@ -167,4 +167,159 @@ public class AcceptanceWebTest {
         assertTrue(currentUrl.contains("/dashboard"),
                 "Dopo il login con la nuova password, dovremmo essere in dashboard. URL attuale: " + currentUrl);
     }
+
+    @Test
+    public void scenario3_deviceAssignment() {
+        String baseUrl = "http://localhost:" + port;
+
+        // 1. Create User and Device in DB
+        String username = "userAssign";
+        // Note: @Sql cleans DB before test, so we are good.
+
+        UserRegistered user = new UserRegistered();
+        user.setUsername(username);
+        user.setEmail("assign@test.it");
+        user.setPassword(passwordEncoder.encode("Password123!"));
+        user.setFirstname("Assign");
+        user.setLastname("User");
+        user.setRole(Role.USER);
+        user.setGender(it.univr.track.entity.enumeration.Gender.MALE);
+        userRepository.save(user);
+
+        String deviceName = "TestSensor-01";
+        Device device = new Device(deviceName, DeviceStatus.AVAILABLE, null);
+        deviceRepository.save(device);
+
+        try {
+            // 2. Login as Admin
+            driver.get(baseUrl + "/signIn");
+            LoginPageObject loginPage = new LoginPageObject(driver);
+            loginPage.performLogin("admin", "password");
+
+            // 3. Go to deviceAndUsers
+            // Using explicit URL navigation as per prompt instruction "vai su
+            // deviceAndUsers.html"
+            driver.get(baseUrl + "/web/utenti-e-dispositivi");
+
+            // 4. Assign
+            DeviceUsersPageObject devicePage = new DeviceUsersPageObject(driver);
+            devicePage.assignDeviceToUser(deviceName, username);
+
+            // 5. Verify
+            boolean assigned = devicePage.isDeviceAssignedToUser(deviceName, username);
+            assertTrue(assigned, "Device '" + deviceName + "' should be assigned to user '" + username + "' in the UI");
+
+        } catch (Exception e) {
+            // Screenshot/Source dump handled by framework or manually here if needed
+            throw e;
+        }
+    }
+
+    @Test
+    public void scenario4_deviceProvisioning() {
+        String baseUrl = "http://localhost:" + port;
+
+        // 1. Create Device in DB
+        String deviceName = "ProvisionDevice-01";
+        Device device = new Device(deviceName, DeviceStatus.AVAILABLE, null);
+        deviceRepository.save(device);
+
+        try {
+            // 2. Login as Admin
+            driver.get(baseUrl + "/signIn");
+            LoginPageObject loginPage = new LoginPageObject(driver);
+            loginPage.performLogin("admin", "password");
+
+            // 3. Go to deviceAndUsers
+            driver.get(baseUrl + "/web/utenti-e-dispositivi");
+
+            // 4. Click detail link
+            DeviceUsersPageObject deviceListPage = new DeviceUsersPageObject(driver);
+            deviceListPage.goToDeviceDetails(deviceName);
+
+            // 5. Provisioning Page
+            DeviceProvisioningPageObject provisionPage = new DeviceProvisioningPageObject(driver);
+
+            // 6. Act: Toggle Provisioning
+            provisionPage.toggleProvisioning();
+
+            // 7. Assert: Check MAC and Key visibility
+            assertTrue(provisionPage.isProvisioningDataVisible(),
+                    "MAC Address and Private Key should be visible after provisioning.");
+
+            // Optional: Log values
+            System.out.println("DEBUG: Generated MAC: " + provisionPage.getMacAddress());
+            System.out.println("DEBUG: Generated Key: " + provisionPage.getPrivateKey().substring(0, 20) + "...");
+
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Test
+    public void scenario5_securityPermissions() {
+        String baseUrl = "http://localhost:" + port;
+
+        // 1. Create Standard User
+        String username = "stdUser";
+        UserRegistered user = new UserRegistered();
+        user.setUsername(username);
+        user.setEmail("std@test.it");
+        user.setPassword(passwordEncoder.encode("password"));
+        user.setFirstname("Standard");
+        user.setLastname("User");
+        user.setRole(Role.USER);
+        user.setGender(it.univr.track.entity.enumeration.Gender.FEMALE);
+        userRepository.save(user);
+
+        // Create a device for detail check
+        String deviceName = "ReadOnlyDevice";
+        Device device = new Device(deviceName, DeviceStatus.AVAILABLE, null);
+        deviceRepository.save(device);
+
+        // 2. Login
+        driver.get(baseUrl + "/signIn");
+        LoginPageObject loginPage = new LoginPageObject(driver);
+        loginPage.performLogin(username, "password");
+
+        // 3. Test Blocked URL (/admin/users)
+        driver.get(baseUrl + "/admin/users");
+        // Expecting 403 Forbidden or Redirect to Login or Error Page
+        // Spring Security usually returns 403 status, browser shows a default error
+        // page or custom one.
+        // We can check the title or page content. Default Spring Boot 403 page often
+        // has "Forbidden" text.
+        String pageSource = driver.getPageSource();
+        boolean isForbidden = pageSource.contains("Forbidden") || pageSource.contains("Access Denied") ||
+                driver.getTitle().contains("403") || driver.getCurrentUrl().contains("login");
+
+        // Note: Our SecurityConfig uses .anyRequest().authenticated() and restricted
+        // /admin/**
+        // It's likely returning a WhiteLabel Error Page with 403 status.
+        assertTrue(isForbidden, "Access to /admin/users should be forbidden for Role USER. Source excerpt: "
+                + pageSource.substring(0, Math.min(pageSource.length(), 200)));
+
+        // 4. Test UI Permissions (Device Page)
+        driver.get(baseUrl + "/web/utenti-e-dispositivi");
+        DeviceUsersPageObject devicePage = new DeviceUsersPageObject(driver);
+
+        // Check Drag & Drop disabled
+        assertTrue(devicePage.isDragAndDropDisabled(), "Drag & Drop should be disabled (class no-drag) for non-admins");
+
+        // 5. Test UI Detail Page
+        devicePage.goToDeviceDetails(deviceName);
+        DeviceProvisioningPageObject provisionPage = new DeviceProvisioningPageObject(driver);
+
+        // Check Provisioning Section Hidden
+        assertTrue(!provisionPage.isProvisioningSectionPresent(),
+                "Provisioning controls should NOT be visible for standard users");
+
+        // Navigate to Dashboard to access Navbar for logout (provisioning page has no
+        // navbar)
+        driver.get(baseUrl + "/dashboard");
+
+        // Logout
+        NavbarPageObject navbar = new NavbarPageObject(driver);
+        navbar.logout();
+    }
 }

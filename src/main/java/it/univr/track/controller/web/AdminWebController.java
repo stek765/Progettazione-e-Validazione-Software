@@ -87,7 +87,7 @@ public class AdminWebController {
             device.setUser(null);
         } else if (targetId.startsWith("user-")) {
             String username = targetId.replace("user-", "");
-            UserRegistered user = userRepository.findByUsername(username);
+            UserRegistered user = userRepository.findByUsername(username).orElse(null);
             if (user != null) {
                 device.setUser(user);
             } else {
@@ -166,19 +166,15 @@ public class AdminWebController {
     }
 
     private MockDevice findDeviceById(String id) {
-        // Cerca nella mappa
-        for (List<MockDevice> list : userDevicesMap.values()) {
-            for (MockDevice d : list) {
-                if (d.id.equals(id))
-                    return d;
-            }
+        try {
+            Long dbId = Long.parseLong(id);
+            return deviceRepository.findById(dbId)
+                    .map(d -> new MockDevice(d.getId().toString(), d.getName(),
+                            (d.getStatus() != null ? d.getStatus().name() : "UNKNOWN")))
+                    .orElse(null);
+        } catch (NumberFormatException e) {
+            return null;
         }
-        // Cerca nei non assegnati
-        for (MockDevice d : unassignedDevices) {
-            if (d.id.equals(id))
-                return d;
-        }
-        return null;
     }
 
     // --- SUPPORT CLASSES ---

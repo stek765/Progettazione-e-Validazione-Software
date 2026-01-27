@@ -44,6 +44,17 @@ public class DeviceUsersPageObject extends PageObject {
         }
     }
 
+    public void goToDeviceDetails(String deviceName) {
+        // Find chip in unassigned pool (assuming it's there for this scenario, or
+        // search everywhere)
+        // Better to search simply by xpath across the page if we don't know if it's
+        // assigned or not
+        String xpath = "//div[contains(@class,'device-chip')][descendant::div[contains(text(),'" + deviceName
+                + "')]]//a[contains(@href,'/web/device-mock/')]";
+        WebElement detailsLink = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(xpath)));
+        detailsLink.click();
+    }
+
     public boolean isDeviceAssignedToUser(String deviceName, String username) {
         try {
             WebElement userZone = driver.findElement(By.id("user-" + username));
@@ -56,5 +67,10 @@ public class DeviceUsersPageObject extends PageObject {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public boolean isDragAndDropDisabled() {
+        // The body should have 'no-drag' class if user is not admin
+        return driver.findElement(By.tagName("body")).getAttribute("class").contains("no-drag");
     }
 }
