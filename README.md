@@ -106,5 +106,6 @@ Servono a coprire i **5 Scenari**, ovvero scenari di vita reale su come verrà 
 
 Tutti questi test sommati hanno portato ad una coverage del 91% 
 
+<img width="1382" height="266" alt="coverage" src="https://github.com/user-attachments/assets/65d9a525-d0d1-4163-8bf3-de7f491ac896" />
 
 
