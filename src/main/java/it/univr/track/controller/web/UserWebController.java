@@ -1,5 +1,6 @@
 package it.univr.track.controller.web;
 
+import it.univr.track.dto.PasswordChangeDTO;
 import it.univr.track.dto.UserProfileDTO;
 import it.univr.track.dto.UserRegistrationDTO;
 import it.univr.track.entity.UserRegistered;
@@ -188,6 +189,10 @@ public class UserWebController {
             model.addAttribute("userProfile", profile);
         });
 
+        if (!model.containsAttribute("passwordChangeDTO")) {
+            model.addAttribute("passwordChangeDTO", new PasswordChangeDTO());
+        }
+
         return "profile";
     }
 
@@ -203,6 +208,9 @@ public class UserWebController {
 
         if (result.hasErrors()) {
             model.addAttribute("isAdmin", isAdmin);
+            if (!model.containsAttribute("passwordChangeDTO")) {
+                model.addAttribute("passwordChangeDTO", new PasswordChangeDTO());
+            }
             return "profile";
         }
 
@@ -223,6 +231,51 @@ public class UserWebController {
         });
 
         redirectAttributes.addFlashAttribute("successMessage", "Profilo aggiornato con successo");
+        return "redirect:/profile";
+    }
+
+    @PostMapping("/profile/change-password")
+    public String changePassword(@Valid @ModelAttribute("passwordChangeDTO") PasswordChangeDTO dto,
+            BindingResult result,
+            Authentication authentication,
+            RedirectAttributes redirectAttributes,
+            Model model) {
+
+        if (result.hasErrors()) {
+            return showProfile(authentication, model);
+        }
+
+        String username = authentication.getName();
+        var userOpt = userRepository.findByUsername(username);
+
+        if (userOpt.isPresent()) {
+            UserRegistered user = userOpt.get();
+
+            // Verify old password
+            if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword())) {
+                result.rejectValue("oldPassword", "mismatch", "La password attuale non è corretta");
+                return showProfile(authentication, model);
+            }
+
+            // Verify confirmation matches new password
+            if (!dto.getNewPassword().equals(dto.getConfirmPassword())) {
+                result.rejectValue("confirmPassword", "mismatch", "Le password non coincidono");
+                return showProfile(authentication, model);
+            }
+
+            // Regex check for new password (same as registration)
+            // Regex: 8 chars, 1 uppercase, 1 lowercase, 1 digit, 1 special char
+            if (!dto.getNewPassword().matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^A-Za-z0-9]).{8,}$")) {
+                result.rejectValue("newPassword", "weak",
+                        "La password deve contenere almeno 8 caratteri, una maiuscola, una minuscola, un numero e un carattere speciale.");
+                return showProfile(authentication, model);
+            }
+
+            user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+            userRepository.save(user);
+            redirectAttributes.addFlashAttribute("successMessage", "Password modificata con successo!");
+        }
+
         return "redirect:/profile";
     }
 

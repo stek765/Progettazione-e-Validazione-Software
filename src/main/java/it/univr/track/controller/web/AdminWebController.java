@@ -2,12 +2,15 @@ package it.univr.track.controller.web;
 
 import it.univr.track.dto.mock.MockDevice;
 import it.univr.track.entity.UserRegistered;
+import it.univr.track.entity.Device;
 import it.univr.track.user.UserRepository;
+import it.univr.track.device.DeviceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -17,20 +20,11 @@ import java.util.*;
 @RequestMapping("/web")
 public class AdminWebController {
 
-    // --- MOCK DATA PERSISTENCE ---
-    // Mappa username -> Lista Device (così persiste anche se ricarichiamo gli
-    // utenti dal DB)
-    private static Map<String, List<MockDevice>> userDevicesMap = new HashMap<>();
-    private static List<MockDevice> unassignedDevices = new ArrayList<>();
-
-    static {
-        // Init Mock Data
-        unassignedDevices.add(new MockDevice("DEV-003", "Sensore Umidità", "Manutenzione"));
-        unassignedDevices.add(new MockDevice("DEV-004", "Camera IP", "Attivo"));
-    }
-
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private DeviceRepository deviceRepository;
 
     @GetMapping("/utenti-e-dispositivi")
     public String deviceAndUsers(Model model, Authentication authentication) {
@@ -39,17 +33,28 @@ public class AdminWebController {
         List<UserRegistered> dbUsers = new ArrayList<>();
         userRepository.findAll().forEach(dbUsers::add);
 
+        // Fetch all devices from DB
+        List<MockDevice> unassignedDevices = new ArrayList<>();
+        Map<String, List<MockDevice>> devicesByUser = new HashMap<>();
+
+        for (Device d : deviceRepository.findAll()) {
+            MockDevice md = new MockDevice(d.getId().toString(), d.getName(),
+                    (d.getStatus() != null ? d.getStatus().name() : "UNKNOWN"));
+
+            if (d.getUser() != null) {
+                devicesByUser.computeIfAbsent(d.getUser().getUsername(), k -> new ArrayList<>()).add(md);
+            } else {
+                unassignedDevices.add(md);
+            }
+        }
+
         for (UserRegistered u : dbUsers) {
             String roleName = (u.getRole() != null) ? u.getRole().name() : "USER";
             // Colore diverso se admin
             String color = roleName.equalsIgnoreCase("ADMIN") ? "#db2777" : "#2563eb";
 
             UserViewModel vm = new UserViewModel(u.getUsername(), roleName, color);
-
-            // Recupera o inizializza i device mockati per questo utente
-            userDevicesMap.putIfAbsent(u.getUsername(), new ArrayList<>());
-            vm.devices = userDevicesMap.get(u.getUsername());
-
+            vm.devices = devicesByUser.getOrDefault(u.getUsername(), new ArrayList<>());
             usersList.add(vm);
         }
 
@@ -65,6 +70,33 @@ public class AdminWebController {
         model.addAttribute("isAdmin", isAdmin);
 
         return "deviceAndUsers";
+    }
+
+    @PostMapping("/api/assign-device")
+    @ResponseBody
+    public ResponseEntity<?> assignDevice(@RequestParam("deviceId") Long deviceId,
+            @RequestParam("targetId") String targetId) {
+
+        Optional<Device> devOpt = deviceRepository.findById(deviceId);
+        if (devOpt.isEmpty()) {
+            return ResponseEntity.badRequest().body("Device not found");
+        }
+        Device device = devOpt.get();
+
+        if (targetId.equals("unassigned-pool")) {
+            device.setUser(null);
+        } else if (targetId.startsWith("user-")) {
+            String username = targetId.replace("user-", "");
+            UserRegistered user = userRepository.findByUsername(username);
+            if (user != null) {
+                device.setUser(user);
+            } else {
+                return ResponseEntity.badRequest().body("User not found");
+            }
+        }
+
+        deviceRepository.save(device);
+        return ResponseEntity.ok(Map.of("status", "OK"));
     }
 
     @GetMapping("/device-mock/{id}")

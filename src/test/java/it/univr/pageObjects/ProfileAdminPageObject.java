@@ -46,13 +46,27 @@ public class ProfileAdminPageObject extends PageObject {
     @FindBy(className = "alert-success")
     private WebElement successMessage;
 
+    // --- CAMBIO PASSWORD ---
+    @FindBy(id = "oldPassword")
+    private WebElement oldPasswordInput;
+
+    @FindBy(id = "newPassword")
+    private WebElement newPasswordInput;
+
+    @FindBy(id = "confirmPassword")
+    private WebElement confirmPasswordInput;
+
+    @FindBy(css = "#passwordForm button[type='submit']")
+    private WebElement changePasswordButton;
+
     public ProfileAdminPageObject(WebDriver driver) {
         super(driver);
         this.navbar = new NavbarPageObject(driver);
     }
 
     // --- METODI DI LETTURA ---
-    // SOLUZIONE: innerText legge il contenuto HTML ignorando la visibilità CSS (animazioni)
+    // SOLUZIONE: innerText legge il contenuto HTML ignorando la visibilità CSS
+    // (animazioni)
     public String getProfileName() {
         return profileNameDisplay.getAttribute("innerText").trim();
     }
@@ -62,16 +76,18 @@ public class ProfileAdminPageObject extends PageObject {
     }
 
     public String getUsername() {
-        return usernameDisplay.getText();
+        return usernameDisplay.getAttribute("innerText").trim();
     }
 
     public String getEmail() {
-        return emailDisplay.getText();
+        return emailDisplay.getAttribute("innerText").trim();
     }
 
     // --- METODI DI SCRITTURA ---
-    public void editProfile(String firstName, String lastName, String city, String phone, String address, String taxId) {
-        // Aspettiamo che il primo campo sia visibile per essere sicuri che il form sia pronto
+    public void editProfile(String firstName, String lastName, String city, String phone, String address,
+            String taxId) {
+        // Aspettiamo che il primo campo sia visibile per essere sicuri che il form sia
+        // pronto
         // Nota: 'wait' è ereditato da PageObject (se protected)
         wait.until(ExpectedConditions.visibilityOf(firstNameInput));
 
@@ -111,6 +127,7 @@ public class ProfileAdminPageObject extends PageObject {
 
     public boolean isSuccessMessageDisplayed() {
         try {
+            wait.until(ExpectedConditions.visibilityOf(successMessage));
             return successMessage.isDisplayed();
         } catch (Exception e) {
             return false;
@@ -122,5 +139,20 @@ public class ProfileAdminPageObject extends PageObject {
             return successMessage.getText();
         }
         return "";
+    }
+
+    public void changePassword(String oldPassword, String newPassword, String confirmPassword) {
+        wait.until(ExpectedConditions.visibilityOf(oldPasswordInput));
+        oldPasswordInput.clear();
+        oldPasswordInput.sendKeys(oldPassword);
+
+        newPasswordInput.clear();
+        newPasswordInput.sendKeys(newPassword);
+
+        confirmPasswordInput.clear();
+        confirmPasswordInput.sendKeys(confirmPassword);
+
+        wait.until(ExpectedConditions.elementToBeClickable(changePasswordButton));
+        changePasswordButton.click();
     }
 }

@@ -1,12 +1,15 @@
 package it.univr.track.acceptance;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import it.univr.pageObjects.GestioneUtentiPageObject;
-import it.univr.pageObjects.LoginPageObject;
-import it.univr.pageObjects.NavbarPageObject;
-import it.univr.pageObjects.RegistrationPageObject;
+import it.univr.pageObjects.*;
+import it.univr.track.entity.UserRegistered;
+import it.univr.track.entity.Device;
+import it.univr.track.entity.enumeration.Role;
+import it.univr.track.entity.enumeration.DeviceStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import it.univr.track.SmartTrackApplication;
 import it.univr.track.user.UserRepository;
+import it.univr.track.device.DeviceRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,6 +35,12 @@ public class AcceptanceWebTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private DeviceRepository deviceRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @BeforeEach
     public void setup() {
@@ -90,7 +99,72 @@ public class AcceptanceWebTest {
                 "RSSMRA80A01H501U");
 
         // 5. Verifica creazione
-        // Dopo il submit, dovremmo essere reindirizzati alla lista utenti
         assertTrue(utentiPage.isUserPresent(newUsername), "Il nuovo utente dovrebbe apparire nella tabella.");
+    }
+
+    @Test
+    public void scenario2_profilePasswordChange() {
+        System.out.println("DEBUG: Executing scenario2_profilePasswordChange");
+        String baseUrl = "http://localhost:" + port;
+
+        // 1. Setup Utente "Scenario 2" Programmaticamente
+        String username = "scenario2User";
+        String oldPasswordRaw = "Password123!";
+        String newPasswordRaw = "NewPassword123!";
+
+        // Ensure user does not exist
+        if (userRepository.findByUsername(username).isPresent()) {
+            System.out.println("DEBUG: User " + username + " already exists. Deleting...");
+            userRepository.delete(userRepository.findByUsername(username).get());
+        }
+
+        UserRegistered user = new UserRegistered();
+        user.setUsername(username);
+        user.setEmail("scenario2@test.it");
+        user.setPassword(passwordEncoder.encode(oldPasswordRaw));
+        user.setFirstname("Scenario");
+        user.setLastname("Two");
+        user.setRole(Role.USER);
+        user.setGender(it.univr.track.entity.enumeration.Gender.OTHER);
+        userRepository.save(user);
+        System.out.println("DEBUG: Created user " + username + " with ID " + user.getId());
+
+        // 2. Login
+        driver.get(baseUrl + "/signIn");
+        LoginPageObject loginPage = new LoginPageObject(driver);
+        loginPage.performLogin(username, oldPasswordRaw);
+
+        // Navigazione al Profilo
+        NavbarPageObject navbar = new NavbarPageObject(driver);
+        navbar.goToProfilePage();
+
+        ProfileAdminPageObject profilePage = new ProfileAdminPageObject(driver);
+
+        // Verifica che siamo sul profilo giusto
+        System.out.println("CURRENT URL: " + driver.getCurrentUrl());
+        String displayedUsername = profilePage.getUsername();
+        System.out.println("DISPLAYED USERNAME: '" + displayedUsername + "'");
+
+        assertTrue(displayedUsername.toLowerCase().contains(username.toLowerCase()),
+                "Dovremmo essere sul profilo di " + username + " but found '" + displayedUsername + "'");
+
+        // 3. Cambio Password
+        profilePage.changePassword(oldPasswordRaw, newPasswordRaw, newPasswordRaw);
+
+        // Verifica messaggio successo (opzionale ma consigliato)
+        assertTrue(profilePage.isSuccessMessageDisplayed(), "Dovrebbe apparire il messaggio di successo");
+
+        // 4. Logout e pulizia
+        navbar.logout();
+        driver.manage().deleteAllCookies(); // Pulizia esplicita
+
+        // 5. Login con NUOVA Password
+        driver.get(baseUrl + "/signIn");
+        loginPage.performLogin(username, newPasswordRaw);
+
+        // 6. Verifica successo finale (Dashboard)
+        String currentUrl = driver.getCurrentUrl();
+        assertTrue(currentUrl.contains("/dashboard"),
+                "Dopo il login con la nuova password, dovremmo essere in dashboard. URL attuale: " + currentUrl);
     }
 }
