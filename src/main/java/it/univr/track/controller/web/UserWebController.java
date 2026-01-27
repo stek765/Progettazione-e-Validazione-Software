@@ -4,8 +4,7 @@ import it.univr.track.dto.UserProfileDTO;
 import it.univr.track.dto.UserRegistrationDTO;
 import it.univr.track.entity.UserRegistered;
 import it.univr.track.entity.enumeration.Role;
-import it.univr.track.repository.UserRepository;
-import it.univr.track.services.SignUpCheckService;
+import it.univr.track.user.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -25,9 +24,6 @@ import java.util.Collections;
 @Controller
 @Profile("gestione-utenti")
 public class UserWebController {
-
-    @Autowired
-    private SignUpCheckService signUpCheckService;
 
     @Autowired
     private UserRepository userRepository;
@@ -97,11 +93,10 @@ public class UserWebController {
         }
 
         // Check password complexity (using same logic as Service)
-        // Regex: 8 chars, 1 uppercase, 1 lowercase, 1 digit, 1 special char OR "pwd"
-        // (backdoor)
+        // Regex: 8 chars, 1 uppercase, 1 lowercase, 1 digit, 1 special char
         String password = dto.getPassword();
         boolean isComplex = password != null
-                && password.matches("^(pwd|(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^A-Za-z0-9]).{8,})$");
+                && password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^A-Za-z0-9]).{8,}$");
         if (!isComplex) {
             result.rejectValue("password", "weak",
                     "La password deve contenere almeno 8 caratteri, una maiuscola, una minuscola, un numero e un carattere speciale.");

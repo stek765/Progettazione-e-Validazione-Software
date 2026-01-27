@@ -1,7 +1,6 @@
-package it.univr.track.services.user;
+package it.univr.track.user;
 
 import it.univr.track.entity.UserRegistered;
-import it.univr.track.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

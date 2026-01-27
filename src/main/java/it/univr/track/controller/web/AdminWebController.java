@@ -2,7 +2,7 @@ package it.univr.track.controller.web;
 
 import it.univr.track.dto.mock.MockDevice;
 import it.univr.track.entity.UserRegistered;
-import it.univr.track.repository.UserRepository;
+import it.univr.track.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;

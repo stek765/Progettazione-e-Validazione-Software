@@ -1,4 +1,4 @@
-package it.univr.track.services.user;
+package it.univr.track.user;
 
 import it.univr.track.entity.UserRegistered;
 import lombok.RequiredArgsConstructor;
@@ -7,12 +7,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+// This service provides administrative operations for managing users.
+// they are here and not in the controller because they might be used also by other services.
 @Service
 @RequiredArgsConstructor
 @Log4j2
 public class UserAdminService {
 
-    private final it.univr.track.repository.UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public List<UserRegistered> getAllUsers() {
         log.info("Recupero della lista di tutti gli utenti");

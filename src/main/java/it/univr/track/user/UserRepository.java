@@ -1,4 +1,4 @@
-package it.univr.track.repository;
+package it.univr.track.user;
 
 import it.univr.track.entity.UserRegistered;
 import org.springframework.data.repository.CrudRepository;

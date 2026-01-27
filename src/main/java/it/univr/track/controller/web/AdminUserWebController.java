@@ -4,7 +4,7 @@ import it.univr.track.dto.UserEditDTO;
 import it.univr.track.dto.UserRegistrationDTO;
 import it.univr.track.entity.UserRegistered;
 import it.univr.track.entity.enumeration.Role;
-import it.univr.track.repository.UserRepository;
+import it.univr.track.user.UserRepository;
 import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,7 @@
 package it.univr.track.security;
 
 import it.univr.track.entity.UserRegistered;
-import it.univr.track.repository.UserRepository;
+import it.univr.track.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

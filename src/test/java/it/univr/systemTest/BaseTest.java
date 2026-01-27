@@ -2,8 +2,8 @@ package it.univr.systemTest;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import it.univr.track.SmartTrackApplication;
-import it.univr.track.repository.DeviceRepository;
-import it.univr.track.repository.UserRepository;
+import it.univr.track.device.DeviceRepository;
+import it.univr.track.user.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.WebDriver;

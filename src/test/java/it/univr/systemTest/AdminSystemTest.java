@@ -4,7 +4,7 @@ import it.univr.pageObjects.*;
 import it.univr.track.entity.UserRegistered;
 import it.univr.track.entity.enumeration.Gender;
 import it.univr.track.entity.enumeration.Role;
-import it.univr.track.repository.UserRepository;
+import it.univr.track.user.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
