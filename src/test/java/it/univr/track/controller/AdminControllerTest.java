@@ -109,4 +109,48 @@ class AdminControllerTest {
         verify(deviceRepository).save(mockDevice);
         assert (mockDevice.getUser() == null);
     }
+
+    @Test
+    @WithMockUser(username = "admin", authorities = { "ADMIN" })
+    void testAssignDeviceNotFound() throws Exception {
+        when(deviceRepository.findById(999L)).thenReturn(Optional.empty());
+
+        mockMvc.perform(post("/web/api/assign-device")
+                .with(csrf())
+                .param("deviceId", "999")
+                .param("targetId", "unassigned-pool"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("Device not found"));
+    }
+
+    @Test
+    @WithMockUser(username = "admin", authorities = { "ADMIN" })
+    void testAssignDeviceUserNotFound() throws Exception {
+        Device mockDevice = new Device();
+        ReflectionTestUtils.setField(mockDevice, "id", 3L);
+        when(deviceRepository.findById(3L)).thenReturn(Optional.of(mockDevice));
+        when(userRepository.findByUsername("ghost-user")).thenReturn(Optional.empty());
+
+        mockMvc.perform(post("/web/api/assign-device")
+                .with(csrf())
+                .param("deviceId", "3")
+                .param("targetId", "user-ghost-user"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("User not found"));
+    }
+
+    @Test
+    @WithMockUser(username = "admin", authorities = { "ADMIN" })
+    void testToggleProvisionNotFound() throws Exception {
+        // Simuliamo che findById fallisca anche nel parsing o non trovi nulla
+        // In AdminWebController.findDeviceById catcha NumberFormatException e ritorna
+        // null
+        when(deviceRepository.findById(any())).thenReturn(Optional.empty());
+
+        mockMvc.perform(post("/web/device-mock/999/provision")
+                .with(csrf())
+                .param("provisioned", "true"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("ERROR"));
+    }
 }

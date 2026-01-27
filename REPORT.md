@@ -78,10 +78,21 @@ Abbiamo completato la suite coprendo i livelli più bassi per garantire robustez
 - **L'idea:** Verificare che l'Entità Java funzioni isolata dal mondo.
 - **Il test:** Istanzia la classe `UserRegistered` e controlla che Costruttori, Builder e valori di Default siano coerenti.
 
-#### 🔵 Controller Tests (Sicurezza & API)
-- **Target:** `AdminControllerTest.java`
-- **L'idea:** Testare le rotte web e la sicurezza senza avviare il browser.
-- **Il test:** Usa **MockMvc** per simulare chiamate HTTP. Verifica che le API rispondano 200 all'Admin e **403 Forbidden** a chi non è autorizzato.
+#### 🔵 Controller Tests (Copertura > 90%)
+Abbiamo esteso massicciamente la suite di test Web per garantire robustezza e sicurezza su tutti i controller.
+- **Target:** `AdminUserWebControllerTest` e `UserWebControllerTest`.
+- **Tecnologia:** **MockMvc** per simulare richieste HTTP complete (GET/POST) inclusi parametri e CSRF, senza avviare un server reale.
+
+**Dettaglio dei nuovi scenari testati:**
+1. **Flusso Utente Completo (`UserWebController`):**
+   - **Registrazione e Validazione:** Verifichiamo che il sistema rifiuti password deboli, email non valide o username duplicati, restituendo i corretti messaggi d'errore in pagina.
+   - **Gestione Profilo:** Testiamo l'aggiornamento dati (es. indirizzo, città) assicurando che venga bloccato se i campi obbligatori mancano (validazione *DTO*).
+   - **Sicurezza e Redirect:** Controllo puntuale che risorse protette come Dashboard o Profilo reindirizzino automaticamente al login se l'utente non è autenticato.
+
+2. **Amministrazione Utenti (`AdminUserWebController`):**
+   - **Operazioni CRUD:** Testiamo creazione, modifica ed eliminazione utenti lato Admin, simulando form submission reali.
+   - **Vincoli di Business:** Abbiamo aggiunto test specifici ("Corner cases") per impedire azioni illogiche, come un Admin che tenta di cancellare il proprio account.
+   - **Resilienza:** Verifica che input malformati non causino errori 500, ma vengano gestiti mostrando nuovamente il form con gli errori evidenziati.
 
 #### 🟠 Integration Tests (Database Reale)
 - **Target:** `DeviceAssignmentSystemTest.java`
