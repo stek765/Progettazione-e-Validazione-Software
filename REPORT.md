@@ -1,26 +1,38 @@
 # Report Progetto Smart-Tracking | MODULO 1
 
-## 🚀 Panoramica del Progetto
+Membri gruppo:
+Stefano Zanolli (VR521385)
+
+## Panoramica del Progetto
 **Smart-Tracking** è una piattaforma IoT per la gestione sicura di dispositivi di tracciamento.
-Questo **Modulo 1** costituisce il "Core" amministrativo e di sicurezza: gestisce l'ecosistema di Utenti e Dispositivi prima che inizi il flusso dati vero e proprio.
+Questo **Modulo 1** si occupa di gestisce l'ecosistema di Utenti e Dispositivi prima che inizi il flusso dati vero e proprio, quindi: 
+- Login
+- Registrazione
+- Creazione utenti
+- Gestione info utenti e proprio profilo
+- Associazione Dispositivi a Utenti
+- Provisioning Dispositivi
 
-### 📐 Architettura e Metodologia
-Lo sviluppo ha seguito un processo **Agile**, focalizzandosi sull'implementazione iterativa di User Stories (i 5 scenari).
-L'architettura segue il pattern **MVC (Model-View-Controller)** standard di Spring Boot:
-- **Model (`entity`):** Rappresenta i dati persistenti (es. `UserRegistered`, `Device`, `ProvisioningToken`).
-- **View (`templates`):** Interfaccia utente server-side rendering realizzata con **Thymeleaf**.
-- **Controller (`controller`):** Smista le richieste HTTP, gestisce la sicurezza e orchestra la logica di business.
 
-### 🧭 Navigazione Rapida nel Codice
+### Architettura e Organizzazione 
+Lo sviluppo ha seguito un processo **Agile**, focalizzandosi sull'implementazione iterativa di User Stories (i 5 scenari di accettazione).
+
+L'architettura segue il pattern **MVC (Model-View-Controller)** standard di Spring Boot, strutturato per garantire una chiara separazione delle responsabilità (*Separation of Concerns*):
+
+- **Model (`entity` & `repository`)**: Rappresenta il cuore dello stato del sistema. Include le **Entity**, che mappano i dati persistenti sul database, e i **Repository** (Spring Data JPA), che isolano la logica di accesso ai dati dal resto dell'applicazione.
+- **View (`templates` & `dto`)**: Gestisce il rendering dell'interfaccia utente. Utilizza **Thymeleaf** per la generazione dinamica delle pagine lato server e i **DTO (Data Transfer Objects)** per il passaggio sicuro dei dati, evitando l'esposizione diretta delle entità del database verso l'esterno.
+- **Controller (`api & webcontrollers`)**: La figura del controller agisce come coordinatore del sistema. Riceve le richieste HTTP, valida i dati in ingresso e orchestra la logica di business delegandola ai servizi, garantendo che ogni operazione rispetti i permessi di accesso (**RBAC**) prima di interagire con il Model.
+
+### Navigazione Rapida nel Codice
 Per orientarsi velocemente nella struttura del progetto:
-- `src/main/java/.../controller`: Qui risiedono gli endpoint Web (HTML) e API (JSON).
-- `src/main/java/.../repository`: Layer di accesso al Database (Spring Data JPA).
-- `src/test/java/.../acceptance`: Dove vivono i test "End-to-End" (i 5 Scenari Selenium).
-- `src/test/java/.../pageObjects`: Le classi che traducono la UI per i test, rendendoli leggibili.
+- `main/.../controller`: Qui risiedono gli endpoint Web (HTML) e API (JSON).
+- `main/.../repository`: Layer di accesso al Database (Spring Data JPA).
+- `test/.../acceptance`: Dove vivono i test "End-to-End" (i 5 Scenari Selenium + API Rest Assured).
+- `test/.../pageObjects`: Le classi che traducono la UI per i test, rendendoli leggibili.
 
 ---
 
-## 🛠 Cheat Sheet Comandi
+## Comandi utili
 
 | Azione | Comando | Descrizione |
 | :--- | :--- | :--- |
@@ -31,7 +43,8 @@ Per orientarsi velocemente nella struttura del progetto:
 | **Report Copertura** | `./gradlew jacocoTestReport` | Genera il report HTML (in `build/reports/jacoco`) |
 
 ---
-
+___
+ ---  --- --- 
 ### Acceptance Tests - API (REST Assured)
 È stata creata una suite di test di accettazione (`AcceptanceApiTest.java`) utilizzando RestAssured. I test coprono con successo i flussi di:
 - registrazione utente, 
@@ -40,16 +53,16 @@ Per orientarsi velocemente nella struttura del progetto:
 
 - login dispositivo.
 
-verificabile con: <u>./gradlew test --tests "it.univr.track.acceptance.AcceptanceApiTest"</u>
+verificabile con: `./gradlew test --tests "it.univr.track.acceptance.AcceptanceApiTest"`
 
 ---
 
-###  Acceptance Tests - Web (Selenium)
+###  Acceptance Tests - Web (Selenium) + PageObject
 `AcceptanceWebTest.java`
-Servono a coprire i **5 Scenari** di vita reale che abbiamo definito. Dimostrano che il sistema è "accettabile" per il cliente finale.
+Servono a coprire i **5 Scenari**, ovvero scenari di vita reale su come verrà usato il software. Dimostrano che il sistema è "accettabile" per il cliente finale.
 
 #### 1. Scenario: Registrazione Nuovi Utenti
-- **L'idea:** Un visitatore arriva sul sito, si registra e ottiene immediatamente l'accesso.
+- **L'idea:** Un nuovo dipendente arriva sul sito, si registra e ottiene immediatamente l'accesso.
 - **Il test:** Selenium apre la pagina di Sign Up, compila il form con dati validi, invia e verifica che l'utente atterri sulla Dashboard personale.
 
 #### 2. Scenario: Gestione Profilo e Sicurezza
@@ -58,11 +71,11 @@ Servono a coprire i **5 Scenari** di vita reale che abbiamo definito. Dimostra
 
 #### 3. Scenario: Assegnazione Dispositivi (Admin)
 - **L'idea:** L'amministratore associa fisicamente un sensore a un utente specifico tramite interfaccia visuale.
-- **Il test:** Usa il **Drag & Drop**: trascina un sensore dalla lista "Disponibili" alla card di un utente. Il test verifica che il sensore appaia ora sotto quel l'utente e che il backend abbia salvato l'associazione.
+- **Il test:** L'automazione esegue il **login come Admin**, naviga alla pagina dei dispositivi e usa il **Drag & Drop**: trascina un sensore dalla lista "Disponibili" alla card di un utente. Il test verifica che il sensore appaia ora sotto quell'utente e che il backend abbia salvato l'associazione.
 
 #### 4. Scenario: Provisioning e Configurazione Sensori
 - **L'idea:** L'admin attiva un nuovo sensore vergine, generando le credenziali crittografiche necessarie.
-- **Il test:** Nella pagina di dettaglio del dispositivo, l'admin attiva l'interruttore (toggle) "Abilita Provisioning". Il test verifica che appaiano a schermo il Token e la Chiave Privata generati dinamicamente.
+- **Il test:** Dopo il **login come Admin**, si naviga nel dettaglio di un dispositivo e si attiva l'interruttore (toggle) "Abilita Provisioning". Il test verifica che appaiano a schermo il MAC del dispositivo e la Chiave Privata da salvare, generati dinamicamente.
 
 #### 5. Scenario: Ruoli e Permessi (Security)
 - **L'idea:** Un utente "base" non deve poter vedere o toccare le funzioni amministrative.
@@ -70,41 +83,28 @@ Servono a coprire i **5 Scenari** di vita reale che abbiamo definito. Dimostra
 
 ---
 
-### Altri Livelli di Testing (La Piramide)
-Abbiamo completato la suite coprendo i livelli più bassi per garantire robustezza interna:
+### Ulteriori Test per aumentare la Coverage:
 
-#### 🟢 Unit Tests (Velocità estrema)
+#### Unit Tests
 - **Target:** `UserUnitTest.java`
 - **L'idea:** Verificare che l'Entità Java funzioni isolata dal mondo.
 - **Il test:** Istanzia la classe `UserRegistered` e controlla che Costruttori, Builder e valori di Default siano coerenti.
 
-#### 🔵 Controller Tests (Copertura > 90%)
-Abbiamo esteso massicciamente la suite di test Web per garantire robustezza e sicurezza su tutti i controller.
+#### Controller Tests 
 - **Target:** `AdminUserWebControllerTest` e `UserWebControllerTest`.
-- **Tecnologia:** **MockMvc** per simulare richieste HTTP complete (GET/POST) inclusi parametri e CSRF, senza avviare un server reale.
+- **Tecnologia:** **MockMvc** per simulare richieste HTTP complete (GET/POST) senza avviare un server reale.
 
-**Dettaglio dei nuovi scenari testati:**
-1. **Flusso Utente Completo (`UserWebController`):**
-   - **Registrazione e Validazione:** Verifichiamo che il sistema rifiuti password deboli, email non valide o username duplicati, restituendo i corretti messaggi d'errore in pagina.
-   - **Gestione Profilo:** Testiamo l'aggiornamento dati (es. indirizzo, città) assicurando che venga bloccato se i campi obbligatori mancano (validazione *DTO*).
-   - **Sicurezza e Redirect:** Controllo puntuale che risorse protette come Dashboard o Profilo reindirizzino automaticamente al login se l'utente non è autenticato.
+##### 1. Test sul Flusso Utente Completo (`UserWebController`)
+- **L'idea:** Garantire che ogni interazione dell'utente finale (registrazione, login, gestione profilo) sia sicura e priva di errori.
+- **Il test:** Vengono testati i meccanismi di validazione (password deboli, email errate), la protezione delle rotte (redirect al login se non autenticati) e l'integrità dei dati durante l'aggiornamento del profilo.
 
-2. **Amministrazione Utenti (`AdminUserWebController`):**
-   - **Operazioni CRUD:** Testiamo creazione, modifica ed eliminazione utenti lato Admin, simulando form submission reali.
-   - **Vincoli di Business:** Abbiamo aggiunto test specifici ("Corner cases") per impedire azioni illogiche, come un Admin che tenta di cancellare il proprio account.
-   - **Resilienza:** Verifica che input malformati non causino errori 500, ma vengano gestiti mostrando nuovamente il form con gli errori evidenziati.
-
-#### 🟠 Integration Tests (Database Reale)
-- **Target:** `DeviceAssignmentSystemTest.java`
-- **L'idea:** Verificare che i dati atterrino correttamente sul Database.
-- **Il test:** Scrive su un DB **H2** in memoria. Verifica che l'assegnazione (User <-> Device) sia persistita e controlla cosa succede ai dispositivi orfani.
+##### 2. Test sull'Amministrazione Utenti (`AdminUserWebController`)
+- **L'idea:** Assicurare che l'amministratore possa gestire il ciclo di vita degli utenti senza causare incongruenze nel sistema.
+- **Il test:** Copre tutte le operazioni CRUD (creazione, modifica, eliminazione), verificando in particolare i casi limite, come il tentativo di un admin di cancellare il proprio account (che deve fallire) o l'invio di dati incompleti.
 
 ---
 
-###  La famiglia "Page Objects" (PO)
+Tutti questi test sommati hanno portato ad una coverage del 91% 
 
-**Dove sono:** `track/acceptance/po/*` 
 
-- **Cosa sono:** Non sono test, ma "traduttori". Dicono al test Selenium come muoversi per interagire con la pagina.
 
-- **Perché:** **Page Object Pattern** serve a rendere i test facili da leggere e da modificare se cambia la grafica del sito.
