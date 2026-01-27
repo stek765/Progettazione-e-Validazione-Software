@@ -1,4 +1,4 @@
-package it.univr.track.configurations;
+package it.univr.track.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

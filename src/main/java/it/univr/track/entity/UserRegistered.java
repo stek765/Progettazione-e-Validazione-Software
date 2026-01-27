@@ -23,7 +23,9 @@ public class UserRegistered extends AbstractEntity {
     @Column(unique = true)
     protected String username;
     protected String password;
+    @NotBlank(message = "Nome obbligatorio")
     protected String firstname;
+    @NotBlank(message = "Cognome obbligatorio")
     protected String lastname;
     @Setter(AccessLevel.NONE)
     protected String email;
@@ -68,37 +70,5 @@ public class UserRegistered extends AbstractEntity {
 
     public void setEmail(String mail) {
         this.email = mail.trim().toLowerCase(Locale.ROOT);
-    }
-
-    public void setFirstName(String firstname) {
-        this.firstname = firstname;
-    }
-
-    public void setLastName(String lastname) {
-        this.lastname = lastname;
-    }
-
-    public String getFirstName() {
-        return firstname;
-    }
-
-    public String getLastName() {
-        return lastname;
-    }
-
-    public void setFirstname(@NotBlank(message = "Nome obbligatorio") String firstname) {
-        this.firstname = firstname;
-    }
-
-    public void setLastname(@NotBlank(message = "Cognome obbligatorio") String lastname) {
-        this.lastname = lastname;
-    }
-
-    public @NotBlank(message = "Nome obbligatorio") String getFirstname() {
-        return firstname;
-    }
-
-    public @NotBlank(message = "Cognome obbligatorio") String getLastname() {
-        return lastname;
     }
 }

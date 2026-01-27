@@ -5,7 +5,6 @@ import it.univr.track.entity.enumeration.Gender;
 import it.univr.track.entity.enumeration.Role;
 import it.univr.track.repository.UserRepository;
 import it.univr.track.services.user.UserAdminService;
-import it.univr.track.services.user.UserRegistrationService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -71,46 +70,43 @@ import static org.junit.jupiter.api.Assertions.*;
 @AutoConfigureMockMvc
 public class UserManagerTest extends BaseTest {
 
-    @Autowired
-    private UserRegistrationService userRegistrationService;
+        @Autowired
+        private UserRepository userRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+        @Autowired
+        private UserAdminService userAdminService;
 
-    @Autowired
-    private UserAdminService userAdminService;
+        @Test
+        public void visualizzaListaUtenti() {
+                List<UserRegistered> utenti = userAdminService.getAllUsers();
+                assertFalse(utenti.isEmpty(), "la lista utenti NON deve essere vuota (popolata da data.sql)");
+        }
 
-    @Test
-    public void visualizzaListaUtenti() {
-        List<UserRegistered> utenti = userAdminService.getAllUsers();
-        assertFalse(utenti.isEmpty(), "la lista utenti NON deve essere vuota (popolata da data.sql)");
-    }
+        @Test
+        public void modificaRuoloUtente() {
+                UserRegistered user = new UserRegistered("Noemi", "Morosini", "nmoro", "secretpass", "noemi@gmail.it",
+                                Role.USER, Gender.FEMALE, "Verona", "Via Roma 1", "1234567890", "MRONMI90A41L378X");
+                userRepository.save(user);
 
-    @Test
-    public void modificaRuoloUtente() {
-        UserRegistered user = new UserRegistered("Noemi", "Morosini", "nmoro", "secretpass", "noemi@gmail.it",
-                Role.USER, Gender.FEMALE, "Verona", "Via Roma 1", "1234567890", "MRONMI90A41L378X");
-        userRepository.save(user);
+                user.setRole(Role.ADMIN);
+                userRepository.save(user);
 
-        user.setRole(Role.ADMIN);
-        userRepository.save(user);
+                assertTrue(userRepository.findByUsername("nmoro").isPresent(),
+                                "L'utente dovrebbe essere presente nel repository dopo il salvataggio");
+                assertEquals(Role.ADMIN, userRepository.findByUsername("nmoro").get().getRole());
+        }
 
-        assertTrue(userRepository.findByUsername("nmoro").isPresent(),
-                "L'utente dovrebbe essere presente nel repository dopo il salvataggio");
-        assertEquals(Role.ADMIN, userRepository.findByUsername("nmoro").get().getRole());
-    }
+        @Test
+        public void eliminaUtente() {
+                UserRegistered user = new UserRegistered("Noemi", "Morosini", "nmoro", "secretpass", "noemi@gmail.it",
+                                Role.USER, Gender.FEMALE, "Verona", "Via Roma 1", "1234567890", "MRONMI90A41L378X");
+                userRepository.save(user);
+                assertTrue(userRepository.findByUsername("nmoro").isPresent(),
+                                "L'utente dovrebbe essere presente nel repository dopo il salvataggio");
+                userRepository.delete(user);
+                assertFalse(userRepository.findByUsername("nmoro").isPresent(),
+                                "L'utente non dovrebbe essere più presente nel repository dopo l'eliminazione");
 
-    @Test
-    public void eliminaUtente() {
-        UserRegistered user = new UserRegistered("Noemi", "Morosini", "nmoro", "secretpass", "noemi@gmail.it",
-                Role.USER, Gender.FEMALE, "Verona", "Via Roma 1", "1234567890", "MRONMI90A41L378X");
-        userRepository.save(user);
-        assertTrue(userRepository.findByUsername("nmoro").isPresent(),
-                "L'utente dovrebbe essere presente nel repository dopo il salvataggio");
-        userRepository.delete(user);
-        assertFalse(userRepository.findByUsername("nmoro").isPresent(),
-                "L'utente non dovrebbe essere più presente nel repository dopo l'eliminazione");
-
-    }
+        }
 
 }
