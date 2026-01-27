@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="it" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -37,7 +38,7 @@
         /* NAVBAR */
         .navbar {
             background: white;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
@@ -114,7 +115,7 @@
             font-size: 1rem;
             opacity: 0.9;
         }
-        
+
         .hero .btn-hero {
             background: rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(10px);
@@ -126,7 +127,7 @@
             transition: all 0.2s;
             border: 1px solid rgba(255, 255, 255, 0.4);
         }
-        
+
         .hero .btn-hero:hover {
             background: white;
             color: var(--primary);
@@ -136,9 +137,10 @@
         .card {
             background: white;
             border-radius: 12px;
-            padding: 0; 
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            overflow: hidden; /* For table rounded corners */
+            padding: 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            /* For table rounded corners */
         }
 
         .table-container {
@@ -194,11 +196,28 @@
             letter-spacing: 0.025em;
         }
 
-        .badge-admin { background: #fee2e2; color: #991b1b; } /* Adjusted for Admin role */
-        .badge-user { background: #dbeafe; color: #1e40af; } /* Adjusted for User role */
-        
-        .badge-active { background: #dcfce7; color: #166534; }
-        .badge-blocked { background: #f3f4f6; color: #374151; }
+        .badge-admin {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* Adjusted for Admin role */
+        .badge-user {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        /* Adjusted for User role */
+
+        .badge-active {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .badge-blocked {
+            background: #f3f4f6;
+            color: #374151;
+        }
 
         /* BUTTONS */
         .btn-icon {
@@ -210,12 +229,14 @@
             transition: all 0.2s;
             color: var(--gray-500);
         }
+
         .btn-icon:hover {
             background: var(--gray-100);
             color: var(--primary);
         }
+
         .btn-icon.delete:hover {
-            background: var(--danger-light); // Red background on hover
+            background: var(--danger-light);
             color: var(--danger);
         }
 
@@ -228,8 +249,18 @@
             align-items: center;
             gap: 0.75rem;
         }
-        .alert-success { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
-        .alert-error { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+
+        .alert-success {
+            background: #ecfdf5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .alert-error {
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
 
         .empty-state {
             text-align: center;
@@ -242,20 +273,21 @@
             color: var(--gray-200);
             margin-bottom: 1rem;
         }
-
     </style>
 </head>
+
 <body>
     <!-- NAVBAR -->
     <nav class="navbar">
         <div class="navbar-brand">
             <i class="fas fa-map-marked-alt"></i>
-            SmartTracking 
-            <span style="font-size: 0.8rem; background: var(--gray-100); color: var(--gray-600); padding: 2px 8px; border-radius: 12px; margin-left: 5px; border: 1px solid var(--gray-200);">Admin</span>
+            SmartTracking
+            <span
+                style="font-size: 0.8rem; background: var(--gray-100); color: var(--gray-600); padding: 2px 8px; border-radius: 12px; margin-left: 5px; border: 1px solid var(--gray-200);">Admin</span>
         </div>
         <div class="nav-links">
             <a th:href="@{/dashboard}"><i class="fas fa-home"></i> Dashboard</a>
-            
+
             <a th:href="@{/web/utenti-e-dispositivi}" style="color:var(--gray-700);">
                 <i class="fas fa-network-wired"></i> Utenti & Dispositivi
             </a>
@@ -277,7 +309,7 @@
 
     <!-- CONTENT -->
     <div class="container">
-        
+
         <!-- HERO -->
         <div class="hero">
             <div>
@@ -316,25 +348,31 @@
                             <td>
                                 <div style="display: flex; align-items: center; gap: 1rem;">
                                     <!-- Random Avatar Color based on ID or Name length -->
-                                    <div style="width: 40px; height: 40px; background: #e0e7ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #4338ca; font-weight: bold;">
-                                        <span th:text="${user.firstname.substring(0,1)} + ${user.lastname.substring(0,1)}">AB</span>
+                                    <div
+                                        style="width: 40px; height: 40px; background: #e0e7ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #4338ca; font-weight: bold;">
+                                        <span
+                                            th:text="${user.firstname.substring(0,1)} + ${user.lastname.substring(0,1)}">AB</span>
                                     </div>
                                     <div>
-                                        <div style="font-weight: 600; color: var(--gray-900);" th:text="${user.firstname} + ' ' + ${user.lastname}">Mario Rossi</div>
-                                        <div style="font-size: 0.8rem; color: var(--gray-500);">@<span th:text="${user.username}">user</span></div>
+                                        <div style="font-weight: 600; color: var(--gray-900);"
+                                            th:text="${user.firstname} + ' ' + ${user.lastname}">Mario Rossi</div>
+                                        <div style="font-size: 0.8rem; color: var(--gray-500);">@<span
+                                                th:text="${user.username}">user</span></div>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <div style="display: flex; flex-direction: column; gap: 2px;">
-                                    <span style="font-size: 0.9rem;"><i class="fas fa-envelope" style="color: var(--gray-400); margin-right: 5px;"></i> <span th:text="${user.email}">mail@example.com</span></span>
+                                    <span style="font-size: 0.9rem;"><i class="fas fa-envelope"
+                                            style="color: var(--gray-400); margin-right: 5px;"></i> <span
+                                            th:text="${user.email}">mail@example.com</span></span>
                                     <!-- <span style="font-size: 0.8rem; color: var(--gray-500);"><i class="fas fa-phone" style="font-size: 0.7rem; margin-right: 5px;"></i> +39 333 1234567</span> -->
                                 </div>
                             </td>
                             <td>
-                                <span class="badge" 
-                                      th:classappend="${user.role.name() == 'ADMIN'} ? 'badge-admin' : 'badge-user'"
-                                      th:text="${user.role}">
+                                <span class="badge"
+                                    th:classappend="${user.role.name() == 'ADMIN'} ? 'badge-admin' : 'badge-user'"
+                                    th:text="${user.role}">
                                     USER
                                 </span>
                             </td>
@@ -343,13 +381,15 @@
                             </td>
                             <td style="text-align: right;">
                                 <div style="display: flex; justify-content: flex-end; gap: 0.5rem;">
-                                    
-                                    <a th:href="@{/admin/users/edit/{username}(username=${user.username})}" class="btn-icon" title="Modifica Utente" style="text-decoration: none; display: flex; align-items: center; justify-content: center;">
+
+                                    <a th:href="@{/admin/users/edit/{username}(username=${user.username})}"
+                                        class="btn-icon" title="Modifica Utente"
+                                        style="text-decoration: none; display: flex; align-items: center; justify-content: center;">
                                         <i class="fas fa-edit"></i>
                                     </a>
 
-                                    <form th:action="@{/admin/users/delete}" method="post" 
-                                          onsubmit="return confirm('Sei DAVVERO sicuro di voler eliminare questo utente?');">
+                                    <form th:action="@{/admin/users/delete}" method="post"
+                                        onsubmit="return confirm('Sei DAVVERO sicuro di voler eliminare questo utente?');">
                                         <input type="hidden" name="usernameToDelete" th:value="${user.username}" />
                                         <button type="submit" class="btn-icon delete" title="Elimina Utente">
                                             <i class="fas fa-trash-alt"></i>
@@ -358,7 +398,7 @@
                                 </div>
                             </td>
                         </tr>
-                        
+
                         <!-- Empty State -->
                         <tr th:if="${users.empty}">
                             <td colspan="5" class="empty-state">
@@ -375,4 +415,5 @@
     </div>
 
 </body>
+
 </html>
