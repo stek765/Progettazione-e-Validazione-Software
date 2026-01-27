@@ -27,9 +27,6 @@ class AcceptanceApiTest {
         RestAssured.port = port;
     }
 
-    /**
-     * Test registrazione nuovo utente (API: /api/register)
-     */
     @Test
     void testUserRegistration() {
         String randomUsername = "user_" + UUID.randomUUID().toString().substring(0, 8);
@@ -46,20 +43,16 @@ class AcceptanceApiTest {
         user.put("telephoneNumber", "1234567890");
         user.put("taxIdentificationNumber", "ABCDEF12G34H567I");
 
-        // Esegui POST /api/register
         given()
-                // Se necessario auth, ma su register di solito è pubblica o admin
-                // Diciamo che qui è pubblica per il test
                 .contentType(ContentType.JSON)
                 .body(user)
                 .when()
                 .post("/api/register")
                 .then()
-                .statusCode(200);
+                .statusCode(200); // Rimane 200 come da nuovo controller
 
-        // Verifica che l'utente sia nella lista (usando GET /api/users)
         given()
-                .auth().preemptive().basic("admin", "password") // Assumiamo richieda auth
+                .auth().preemptive().basic("admin", "password")
                 .when()
                 .get("/api/users")
                 .then()
@@ -67,14 +60,10 @@ class AcceptanceApiTest {
                 .body("username", hasItem(randomUsername));
     }
 
-    /**
-     * Test Provisioning Dispositivo (API: /api/devices/provision)
-     */
     @Test
     void testDeviceProvisioning() {
         Map<String, Object> device = new HashMap<>();
         device.put("name", "Sensor_" + UUID.randomUUID());
-        // Status di default viene messo ACTIVE nel controller se null
 
         given()
                 .contentType(ContentType.JSON)
@@ -82,31 +71,27 @@ class AcceptanceApiTest {
                 .when()
                 .post("/api/devices/provision")
                 .then()
-                .statusCode(200)
+                .statusCode(201) // CAMBIATO: Il nuovo controller restituisce 201 Created
                 .body("id", notNullValue())
                 .body("status", equalTo("ACTIVE"));
     }
 
-    /**
-     * Test Login Dispositivo (API: /api/device/login)
-     */
     @Test
     void testDeviceLogin() {
-        // 1. Provisioning di un dispositivo
         String deviceName = "LoginTestDevice_" + UUID.randomUUID();
         Map<String, Object> device = new HashMap<>();
         device.put("name", deviceName);
 
+        // Effettuiamo il provisioning e ci aspettiamo 201
         Integer deviceId = given()
                 .contentType(ContentType.JSON)
                 .body(device)
                 .when()
                 .post("/api/devices/provision")
                 .then()
-                .statusCode(200)
+                .statusCode(201) // CAMBIATO: 201 Created
                 .extract().path("id");
 
-        // 2. Login con dispositivo
         Map<String, Object> loginRequest = new HashMap<>();
         loginRequest.put("deviceId", deviceId);
         loginRequest.put("name", deviceName);
@@ -121,9 +106,6 @@ class AcceptanceApiTest {
                 .body(containsString("Dispositivo autenticato"));
     }
 
-    /**
-     * Test Lista Utenti (API: /api/users)
-     */
     @Test
     void testListUsers() {
         given()
@@ -133,6 +115,6 @@ class AcceptanceApiTest {
                 .then()
                 .statusCode(200)
                 .contentType(ContentType.JSON)
-                .body("$", hasSize(greaterThanOrEqualTo(1))); // Almeno admin esiste
+                .body("$", hasSize(greaterThanOrEqualTo(1)));
     }
 }
