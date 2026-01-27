@@ -80,6 +80,7 @@ class AdminControllerTest {
 
         mockMvc.perform(post("/web/api/assign-device")
                 .with(csrf())
+                .param("deviceId", "1")
                 .param("targetId", "user-testuser"))
                 .andExpect(status().isOk());
 
@@ -101,6 +102,7 @@ class AdminControllerTest {
 
         mockMvc.perform(post("/web/api/assign-device")
                 .with(csrf())
+                .param("deviceId", "2")
                 .param("targetId", "unassigned-pool"))
                 .andExpect(status().isOk());
 
