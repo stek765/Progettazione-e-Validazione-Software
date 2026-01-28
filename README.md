@@ -58,17 +58,6 @@ Per orientarsi velocemente nella struttura del progetto:
 <hr>
 
 # TEST:
-### Acceptance Tests - API (REST Assured)
-È stata creata una suite di test di accettazione (`AcceptanceApiTest.java`) utilizzando RestAssured. I test coprono con successo i flussi di:
-- registrazione utente, 
-
-- provisioning dispositivo,
-
-- login dispositivo.
-
-verificabile con: `./gradlew test --tests "it.univr.track.acceptance.AcceptanceApiTest"`
-
-<hr>
 
 ###  Acceptance Tests - Web (Selenium + PageObject)
 `AcceptanceWebTest.java`
@@ -93,6 +82,18 @@ Servono a coprire i **5 Scenari**, ovvero scenari di vita reale su come verrà 
 #### 5. Scenario: Ruoli e Permessi (Security)
 - **L'idea:** Un utente "base" non deve poter vedere o toccare le funzioni amministrative.
 - **Il test:** Si effettua il login come utente standard. Si tenta di accedere forzatamente agli URL di amministrazione (ricevendo un errore 403 o redirect) e si verifica visivamente che i controlli di Drag & Drop e Provisioning siano nascosti o disabilitati.
+
+<hr>
+
+### Acceptance Tests - API (REST Assured)
+È stata creata una suite di test di accettazione (`AcceptanceApiTest.java`) utilizzando RestAssured. I test coprono con successo i flussi di:
+- registrazione utente, 
+
+- provisioning dispositivo,
+
+- login dispositivo.
+
+verificabile con: `./gradlew test --tests "it.univr.track.acceptance.AcceptanceApiTest"`
 
 <hr>
 
