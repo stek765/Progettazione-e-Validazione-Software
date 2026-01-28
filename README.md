@@ -48,10 +48,6 @@ L'architettura segue il pattern **MVC (Model-View-Controller)** standard di Spri
 | **Test Singolo** | `./gradlew test --tests "NomeClasse"` | Esegue solo una specifica classe di test |
 | **Report Copertura** | `./gradlew jacocoTestReport` | Genera il report HTML (in `build/reports/jacoco`) |
 
-<hr>
-<hr>
-
-
 ### Navigazione Rapida nel Codice
 Per orientarsi velocemente nella struttura del progetto:
 - `main/.../controller`: Qui risiedono gli endpoint Web (HTML) e API (JSON).
@@ -60,9 +56,7 @@ Per orientarsi velocemente nella struttura del progetto:
 - `test/.../pageObjects`: Le classi che traducono la UI per i test, rendendoli leggibili.
 <hr>
 <hr>
-<hr>
 
- ---  --- --- 
 ### Acceptance Tests - API (REST Assured)
 È stata creata una suite di test di accettazione (`AcceptanceApiTest.java`) utilizzando RestAssured. I test coprono con successo i flussi di:
 - registrazione utente, 
