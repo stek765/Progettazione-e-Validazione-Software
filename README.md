@@ -14,7 +14,7 @@ Questo **Modulo 1** si occupa di gestisce l'ecosistema di Utenti e Dispositivi p
 - Provisioning Dispositivi
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/ff650e34-64c4-483e-af1f-4b2b6542bc0f" width="400" />
+  <img src="https://github.com/user-attachments/assets/ff650e34-64c4-483e-af1f-4b2b6542bc0f" width="600" />
 </p>
 
 
