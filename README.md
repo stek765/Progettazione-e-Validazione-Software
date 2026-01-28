@@ -19,23 +19,18 @@ Questo **Modulo 1** si occupa di gestisce l'ecosistema di Utenti e Dispositivi p
   <img src="https://github.com/user-attachments/assets/ff650e34-64c4-483e-af1f-4b2b6542bc0f" width="500" />
 </p>
 
-
+---
 
 ### Architettura e Organizzazione 
 Lo sviluppo ha seguito un processo **Agile**, focalizzandosi sull'implementazione iterativa di User Stories (i 5 scenari di accettazione).
 
-L'architettura segue il pattern **MVC (Model-View-Controller)** standard di Spring Boot, strutturato per garantire una chiara separazione delle responsabilità (*Separation of Concerns*):
+L'architettura segue il pattern **MVC (Model-View-Controller)** standard di Spring Boot, strutturato per garantire una chiara separazione delle responsabilità:
 
-- **Model (`entity` & `repository`)**: Rappresenta il cuore dello stato del sistema. Include le **Entity**, che mappano i dati persistenti sul database, e i **Repository** (Spring Data JPA), che isolano la logica di accesso ai dati dal resto dell'applicazione.
-- **View (`templates` & `dto`)**: Gestisce il rendering dell'interfaccia utente. Utilizza **Thymeleaf** per la generazione dinamica delle pagine lato server e i **DTO (Data Transfer Objects)** per il passaggio sicuro dei dati, evitando l'esposizione diretta delle entità del database verso l'esterno.
-- **Controller (`api & webcontrollers`)**: La figura del controller agisce come coordinatore del sistema. Riceve le richieste HTTP, valida i dati in ingresso e orchestra la logica di business delegandola ai servizi, garantendo che ogni operazione rispetti i permessi di accesso (**RBAC**) prima di interagire con il Model.
+- **Model (`entity` & `repository`)**: le **Entity** mappano i dati persistenti sul database e i **Repository** isolano la logica di accesso ai dati dal resto dell'applicazione.
 
-### Navigazione Rapida nel Codice
-Per orientarsi velocemente nella struttura del progetto:
-- `main/.../controller`: Qui risiedono gli endpoint Web (HTML) e API (JSON).
-- `main/.../repository`: Layer di accesso al Database (Spring Data JPA).
-- `test/.../acceptance`: Dove vivono i test "End-to-End" (i 5 Scenari Selenium + API Rest Assured).
-- `test/.../pageObjects`: Le classi che traducono la UI per i test, rendendoli leggibili.
+- **View (`templates` & `dto`)**: **Thymeleaf** per la generazione dinamica delle pagine lato server e i **DTO (Data Transfer Objects)** per il passaggio sicuro dei dati, evitando l'esposizione diretta delle entità del database verso l'esterno.
+
+- **Controller (`api & webcontrollers`)**: La figura del controller agisce come coordinatore del sistema. Riceve le richieste HTTP, valida i dati in ingresso e orchestra la logica di business delegandola ai servizi, garantendo che ogni operazione rispetti i permessi di accesso prima di interagire con il Model.
 
 ---
 
@@ -51,6 +46,15 @@ Per orientarsi velocemente nella struttura del progetto:
 
 ---
 ___
+
+
+### Navigazione Rapida nel Codice
+Per orientarsi velocemente nella struttura del progetto:
+- `main/.../controller`: Qui risiedono gli endpoint Web (HTML) e API (JSON).
+- `main/.../repository`: Layer di accesso al Database (Spring Data JPA).
+- `test/.../acceptance`: Dove vivono i test "End-to-End" (i 5 Scenari Selenium + API Rest Assured).
+- `test/.../pageObjects`: Le classi che traducono la UI per i test, rendendoli leggibili.
+
  ---  --- --- 
 ### Acceptance Tests - API (REST Assured)
 È stata creata una suite di test di accettazione (`AcceptanceApiTest.java`) utilizzando RestAssured. I test coprono con successo i flussi di:
