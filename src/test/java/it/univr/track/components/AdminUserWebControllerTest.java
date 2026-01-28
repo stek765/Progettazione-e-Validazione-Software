@@ -1,4 +1,4 @@
-package it.univr.track.controller;
+package it.univr.track.components;
 
 import it.univr.track.controller.web.AdminUserWebController;
 import it.univr.track.dto.UserEditDTO;

@@ -1,4 +1,4 @@
-package it.univr.track.controller;
+package it.univr.track.components;
 
 import it.univr.track.SmartTrackApplication;
 import it.univr.track.controller.web.UserWebController;
