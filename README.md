@@ -13,6 +13,9 @@ Questo **Modulo 1** si occupa di gestisce l'ecosistema di Utenti e Dispositivi p
 - Associazione Dispositivi a Utenti
 - Provisioning Dispositivi
 
+<img width="1536" height="1024" alt="img_track1" src="https://github.com/user-attachments/assets/ff650e34-64c4-483e-af1f-4b2b6542bc0f" />
+
+
 
 ### Architettura e Organizzazione 
 Lo sviluppo ha seguito un processo **Agile**, focalizzandosi sull'implementazione iterativa di User Stories (i 5 scenari di accettazione).
