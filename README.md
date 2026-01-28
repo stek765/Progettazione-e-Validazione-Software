@@ -49,8 +49,6 @@ L'architettura segue il pattern **MVC (Model-View-Controller)** standard di Spri
 | **Test Singolo** | `./gradlew test --tests "NomeClasse"` | Esegue solo una specifica classe di test |
 | **Report Copertura** | `./gradlew jacocoTestReport` | Genera il report HTML (in `build/reports/jacoco`) |
 
----
-___
 <hr>
 <hr>
 
