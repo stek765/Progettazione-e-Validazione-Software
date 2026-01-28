@@ -70,7 +70,7 @@ verificabile con: `./gradlew test --tests "it.univr.track.acceptance.AcceptanceA
 
 <hr>
 
-###  Acceptance Tests - Web (Selenium) + PageObject
+###  Acceptance Tests - Web (Selenium + PageObject)
 `AcceptanceWebTest.java`
 Servono a coprire i **5 Scenari**, ovvero scenari di vita reale su come verrà usato il software. Dimostrano che il sistema è "accettabile" per il cliente finale.
 
