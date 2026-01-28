@@ -25,7 +25,7 @@ Il **Modulo 1** si occupa di gestire l'ecosistema di Utenti e Dispositivi prima 
 <hr>
 <hr>
 
-### Architettura e Organizzazione 
+# Architettura e Organizzazione 
 Lo sviluppo ha seguito un processo **Agile**, focalizzandosi sull'implementazione iterativa di User Stories (i 5 scenari di accettazione).
 
 L'architettura segue il pattern **MVC (Model-View-Controller)** standard di Spring Boot, strutturato per garantire una chiara separazione delle responsabilità:
