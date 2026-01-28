@@ -22,7 +22,6 @@ Il **Modulo 1** si occupa di gestire l'ecosistema di Utenti e Dispositivi prima 
   <img src="https://github.com/user-attachments/assets/ff650e34-64c4-483e-af1f-4b2b6542bc0f" width="500" />
 </p>
 
----
 <hr>
 <hr>
 
