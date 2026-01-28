@@ -33,7 +33,6 @@ public class AdminWebController {
         List<UserRegistered> dbUsers = new ArrayList<>();
         userRepository.findAll().forEach(dbUsers::add);
 
-        // Fetch all devices from DB
         List<MockDevice> unassignedDevices = new ArrayList<>();
         Map<String, List<MockDevice>> devicesByUser = new HashMap<>();
 
@@ -50,7 +49,6 @@ public class AdminWebController {
 
         for (UserRegistered u : dbUsers) {
             String roleName = (u.getRole() != null) ? u.getRole().name() : "USER";
-            // Colore diverso se admin
             String color = roleName.equalsIgnoreCase("ADMIN") ? "#db2777" : "#2563eb";
 
             UserViewModel vm = new UserViewModel(u.getUsername(), roleName, color);
@@ -101,7 +99,6 @@ public class AdminWebController {
 
     @GetMapping("/device-mock/{id}")
     public String deviceProvisioning(@PathVariable("id") String id, Model model, Authentication authentication) {
-        // Find device in lists
         MockDevice device = findDeviceById(id);
 
         if (device == null) {
@@ -120,7 +117,6 @@ public class AdminWebController {
         return "deviceProvisioning";
     }
 
-    // Endpoint for AJAX
     @PostMapping("/device-mock/{id}/provision")
     @ResponseBody
     public Map<String, String> toggleProvision(@PathVariable("id") String id,
@@ -134,7 +130,6 @@ public class AdminWebController {
             device.provisioned = provisioned;
             if (provisioned) {
                 device.macAddress = mac;
-                // Generazione Chiavi RSA
                 try {
                     KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
                     kpg.initialize(2048);
@@ -143,8 +138,6 @@ public class AdminWebController {
                     String publicKey = Base64.getEncoder().encodeToString(kp.getPublic().getEncoded());
                     String privateKey = Base64.getEncoder().encodeToString(kp.getPrivate().getEncoded());
 
-                    // Salviamo la pubblica (simulazione) e ritorniamo la privata
-                    // In un caso reale salveremmo publicKey nel DB associata al device
                     System.out.println("Generated Public Key for device " + id + ": " + publicKey);
 
                     response.put("status", "OK");

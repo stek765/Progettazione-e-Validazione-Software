@@ -49,7 +49,7 @@ class AcceptanceApiTest {
                 .when()
                 .post("/api/register")
                 .then()
-                .statusCode(200); // Rimane 200 come da nuovo controller
+                .statusCode(200);
 
         given()
                 .auth().preemptive().basic("admin", "password")
@@ -71,7 +71,7 @@ class AcceptanceApiTest {
                 .when()
                 .post("/api/devices/provision")
                 .then()
-                .statusCode(201) // CAMBIATO: Il nuovo controller restituisce 201 Created
+                .statusCode(201)
                 .body("id", notNullValue())
                 .body("status", equalTo("ACTIVE"));
     }
@@ -82,14 +82,13 @@ class AcceptanceApiTest {
         Map<String, Object> device = new HashMap<>();
         device.put("name", deviceName);
 
-        // Effettuiamo il provisioning e ci aspettiamo 201
         Integer deviceId = given()
                 .contentType(ContentType.JSON)
                 .body(device)
                 .when()
                 .post("/api/devices/provision")
                 .then()
-                .statusCode(201) // CAMBIATO: 201 Created
+                .statusCode(201)
                 .extract().path("id");
 
         Map<String, Object> loginRequest = new HashMap<>();

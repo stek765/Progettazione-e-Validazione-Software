@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-// This service provides administrative operations for managing users.
-// they are here and not in the controller because they might be used also by other services.
 @Service
 @RequiredArgsConstructor
 @Log4j2

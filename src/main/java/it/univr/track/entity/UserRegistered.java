@@ -57,9 +57,6 @@ public class UserRegistered extends AbstractEntity {
         this.failedLoginAttempts = 0;
     }
 
-    /**
-     * Normalizza l'email in lower-case
-     */
     @PrePersist
     @PreUpdate
     private void normalizEmail() {

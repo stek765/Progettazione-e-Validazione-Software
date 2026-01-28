@@ -27,9 +27,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 @WebMvcTest(AdminWebController.class)
-// Importante: a volte serve importare la SecurityConfig se definita a parte,
-// ma con @WebMvcTest e @WithMockUser spesso basta questo per testare il
-// controller isolato.
 class AdminControllerTest {
 
     @Autowired
@@ -52,17 +49,9 @@ class AdminControllerTest {
     }
 
     @Test
-    // Senza utente -> dovrebbe essere redirect al login o 401/403 a seconda delle
-    // config
-    // Dato che stiamo testando solo il controller (slice test), Spring Security di
-    // default
-    // su @WebMvcTest protegge gli endpoint. Se non siamo autenticati -> 401
-    // Unauthorized nei test default api
-    // o 302 Login Page. Verifichiamo il 401/403 o 302.
-    // In questo progetto sembra che usiamo i form login.
     void testAccessDeniedForAnonymous() throws Exception {
         mockMvc.perform(get("/web/utenti-e-dispositivi"))
-                .andExpect(status().isUnauthorized()); // Spesso nei test MVC slice senza full config, torna 401
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -84,9 +73,7 @@ class AdminControllerTest {
                 .param("targetId", "user-testuser"))
                 .andExpect(status().isOk());
 
-        // Verify repository interaction
         verify(deviceRepository).save(mockDevice);
-        // Verify state change
         assert (mockDevice.getUser() == mockUser);
     }
 
@@ -142,9 +129,6 @@ class AdminControllerTest {
     @Test
     @WithMockUser(username = "admin", authorities = { "ADMIN" })
     void testToggleProvisionNotFound() throws Exception {
-        // Simuliamo che findById fallisca anche nel parsing o non trovi nulla
-        // In AdminWebController.findDeviceById catcha NumberFormatException e ritorna
-        // null
         when(deviceRepository.findById(any())).thenReturn(Optional.empty());
 
         mockMvc.perform(post("/web/device-mock/999/provision")

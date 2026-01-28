@@ -32,17 +32,11 @@ public class UserWebController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    /**
-     * Home page - redirects to dashboard
-     */
     @GetMapping("/")
     public String home() {
         return "redirect:/dashboard";
     }
 
-    /**
-     * Dashboard page with statistics overview
-     */
     @GetMapping("/dashboard")
     public String dashboard(Authentication authentication, Model model) {
         String username = (authentication != null) ? authentication.getName() : "Ospite";
@@ -63,38 +57,26 @@ public class UserWebController {
         return "dashboard";
     }
 
-    /**
-     * Richiama la pagina signUp.html per visualizzare il form di registrazione.
-     *
-     * @return signup.html
-     */
     @GetMapping("/signUp")
     public String signUpForm(Model model) {
         model.addAttribute("userRegistrationDTO", new UserRegistrationDTO());
         return "signUp";
     }
 
-    /**
-     * Gestisce la registrazione usando il DTO.
-     */
     @PostMapping("/signUp")
     public String doSignUp(@Valid @ModelAttribute("userRegistrationDTO") UserRegistrationDTO dto,
             BindingResult result,
             RedirectAttributes redirectAttributes,
             Model model) {
 
-        // Check for duplicate username
         if (!userRepository.findByUsername(dto.getUsername()).isEmpty()) {
             result.rejectValue("username", "duplicate", "Username già in uso.");
         }
 
-        // Check password match
         if (dto.getPassword() != null && !dto.getPassword().equals(dto.getConfirmPassword())) {
             result.rejectValue("confirmPassword", "mismatch", "Le password non coincidono.");
         }
 
-        // Check password complexity (using same logic as Service)
-        // Regex: 8 chars, 1 uppercase, 1 lowercase, 1 digit, 1 special char
         String password = dto.getPassword();
         boolean isComplex = password != null
                 && password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^A-Za-z0-9]).{8,}$");
@@ -108,7 +90,6 @@ public class UserWebController {
             return "signUp";
         }
 
-        // All checks passed
         UserRegistered newUser = UserRegistered.builder()
                 .firstname(dto.getFirstname())
                 .lastname(dto.getLastname())
@@ -128,11 +109,6 @@ public class UserWebController {
         return "redirect:/signIn";
     }
 
-    // Autenticazione
-
-    /**
-     * Richiama la pagina signIn.html.
-     */
     @GetMapping("/signIn")
     public String signInForm(@RequestParam(required = false) String error,
             @RequestParam(required = false) String logout,
@@ -146,29 +122,12 @@ public class UserWebController {
         return "signIn";
     }
 
-    // La logica di POST /signIn è gestita tipicamente da Spring Security.
-    // Se il tuo SecurityConfig è configurato per intercettare il form login,
-    // questo metodo potrebbe non servire a meno che tu non stia facendo auth
-    // manuale.
-    // Tuttavia, per "lasciare tutto com'è", manterrò la versione vecchia o mi
-    // adeguerò
-    // a quella nuova che NON HA una POST /signIn perché ci pensa Spring Security.
-    // Il nuovo controller NON aveva il metodo POST /signIn.
-    // Il vecchio controller AVEVA il metodo POST /signIn per fare controlli
-    // manuali.
-    // Visto che hai SecurityConfig, è probabile che tu debba usare quello.
-    // Rimuovo il metodo manuale POST /signIn per affidarmi a Spring Security (come
-    // il nuovo controller).
-
-    // Visualizzazione Profilo
-
     @GetMapping("/profile")
     public String showProfile(Authentication authentication, Model model) {
         if (authentication == null)
             return "redirect:/signIn";
         String username = authentication.getName();
 
-        // Pass isAdmin flag to the view for navbar consistency
         boolean isAdmin = authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ADMIN"));
         model.addAttribute("isAdmin", isAdmin);

@@ -138,7 +138,6 @@ public class AdminUserWebController {
             user.setTelephoneNumber(dto.getTelephoneNumber());
             user.setTaxIdentificationNumber(dto.getTaxIdentificationNumber());
 
-            // Handle Password
             if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
                 user.setPassword(passwordEncoder.encode(dto.getPassword()));
             }
