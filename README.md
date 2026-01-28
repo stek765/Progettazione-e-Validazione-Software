@@ -4,11 +4,8 @@ Membri gruppo:
 Stefano Zanolli (VR521385)
 
 ## Panoramica del Progetto
-**Smart-Tracking** è una piattaforma IoT per la gestione sicura di dispositivi di tracciamento.
+**Smart-Tracking** è una piattaforma IoT per la gestione sicura di dispositivi di tracciamento e informazione durante il trasporto di merci.
 Questo **Modulo 1** si occupa di gestisce l'ecosistema di Utenti e Dispositivi prima che inizi il flusso dati vero e proprio, quindi: 
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/ff650e34-64c4-483e-af1f-4b2b6542bc0f" width="600" />
-</p>
 
 - Login
 - Registrazione
@@ -18,6 +15,9 @@ Questo **Modulo 1** si occupa di gestisce l'ecosistema di Utenti e Dispositivi p
 - Provisioning Dispositivi
 
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/ff650e34-64c4-483e-af1f-4b2b6542bc0f" width="600" />
+</p>
 
 
 
