@@ -36,7 +36,6 @@ L'architettura segue il pattern **MVC (Model-View-Controller)** standard di Spri
 
 - **Controller (`api & webcontrollers`)**: La figura del controller agisce come coordinatore del sistema. Riceve le richieste HTTP, valida i dati in ingresso e orchestra la logica di business delegandola ai servizi, garantendo che ogni operazione rispetti i permessi di accesso prima di interagire con il Model.
 
----
 <hr>
 
 ## Comandi utili
