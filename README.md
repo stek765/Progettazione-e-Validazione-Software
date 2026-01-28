@@ -13,7 +13,10 @@ Questo **Modulo 1** si occupa di gestisce l'ecosistema di Utenti e Dispositivi p
 - Associazione Dispositivi a Utenti
 - Provisioning Dispositivi
 
-<img src="https://github.com/user-attachments/assets/ff650e34-64c4-483e-af1f-4b2b6542bc0f" width="600" />
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/ff650e34-64c4-483e-af1f-4b2b6542bc0f" width="400" />
+</p>
+
 
 
 
