@@ -6,6 +6,7 @@ Stefano Zanolli (VR521385)
 ## Panoramica del Progetto
 **Smart-Tracking** è una piattaforma IoT per la gestione sicura di dispositivi di tracciamento e informazione durante il trasporto di merci.
 L'idea del progetto del corso, era di simulare più team ognuno con un modulo diverso che a fine sviluppo avrebbero dovuto unire insieme, garantendone il funzionamento e la sicurezza.
+<hr>
 
 Il **Modulo 1** si occupa di gestire l'ecosistema di Utenti e Dispositivi prima che inizi il flusso dati vero e proprio, e contiene le seguenti tematiche:
 
@@ -22,6 +23,8 @@ Il **Modulo 1** si occupa di gestire l'ecosistema di Utenti e Dispositivi prima 
 </p>
 
 ---
+<hr>
+<hr>
 
 ### Architettura e Organizzazione 
 Lo sviluppo ha seguito un processo **Agile**, focalizzandosi sull'implementazione iterativa di User Stories (i 5 scenari di accettazione).
@@ -35,6 +38,7 @@ L'architettura segue il pattern **MVC (Model-View-Controller)** standard di Spri
 - **Controller (`api & webcontrollers`)**: La figura del controller agisce come coordinatore del sistema. Riceve le richieste HTTP, valida i dati in ingresso e orchestra la logica di business delegandola ai servizi, garantendo che ogni operazione rispetti i permessi di accesso prima di interagire con il Model.
 
 ---
+<hr>
 
 ## Comandi utili
 
@@ -48,6 +52,8 @@ L'architettura segue il pattern **MVC (Model-View-Controller)** standard di Spri
 
 ---
 ___
+<hr>
+<hr>
 
 
 ### Navigazione Rapida nel Codice
@@ -56,6 +62,9 @@ Per orientarsi velocemente nella struttura del progetto:
 - `main/.../repository`: Layer di accesso al Database (Spring Data JPA).
 - `test/.../acceptance`: Dove vivono i test "End-to-End" (i 5 Scenari Selenium + API Rest Assured).
 - `test/.../pageObjects`: Le classi che traducono la UI per i test, rendendoli leggibili.
+<hr>
+<hr>
+<hr>
 
  ---  --- --- 
 ### Acceptance Tests - API (REST Assured)
@@ -69,6 +78,7 @@ Per orientarsi velocemente nella struttura del progetto:
 verificabile con: `./gradlew test --tests "it.univr.track.acceptance.AcceptanceApiTest"`
 
 ---
+<hr>
 
 ###  Acceptance Tests - Web (Selenium) + PageObject
 `AcceptanceWebTest.java`
@@ -95,29 +105,30 @@ Servono a coprire i **5 Scenari**, ovvero scenari di vita reale su come verrà 
 - **Il test:** Si effettua il login come utente standard. Si tenta di accedere forzatamente agli URL di amministrazione (ricevendo un errore 403 o redirect) e si verifica visivamente che i controlli di Drag & Drop e Provisioning siano nascosti o disabilitati.
 
 ---
+<hr>
 
-### Ulteriori Test per aumentare la Coverage:
+### UNIT & COMPONENTS TESTS  per **aumentare la Coverage**:
 
 #### Unit Tests
 - **Target:** `UserUnitTest.java`
 - **L'idea:** Verificare che l'Entità Java funzioni isolata dal mondo.
 - **Il test:** Istanzia la classe `UserRegistered` e controlla che Costruttori, Builder e valori di Default siano coerenti.
 
-#### Controller Tests 
+#### Components Tests 
 - **Target:** `AdminUserWebControllerTest` e `UserWebControllerTest`.
 - **Tecnologia:** **MockMvc** per simulare richieste HTTP complete (GET/POST) senza avviare un server reale.
 
-##### 1. Test sul Flusso Utente Completo (`UserWebController`)
+##### Test sul Flusso Utente Completo (`UserWebController`)
 - **L'idea:** Garantire che ogni interazione dell'utente finale (registrazione, login, gestione profilo) sia sicura e priva di errori.
 - **Il test:** Vengono testati i meccanismi di validazione (password deboli, email errate), la protezione delle rotte (redirect al login se non autenticati) e l'integrità dei dati durante l'aggiornamento del profilo.
 
-##### 2. Test sull'Amministrazione Utenti (`AdminUserWebController`)
+##### Test sull'Amministrazione Utenti (`AdminUserWebController`)
 - **L'idea:** Assicurare che l'amministratore possa gestire il ciclo di vita degli utenti senza causare incongruenze nel sistema.
 - **Il test:** Copre tutte le operazioni CRUD (creazione, modifica, eliminazione), verificando in particolare i casi limite, come il tentativo di un admin di cancellare il proprio account (che deve fallire) o l'invio di dati incompleti.
 
 ---
 
-Tutti questi test sommati hanno portato ad una coverage del 91% 
+I test creati, sommati tra loro, hanno consentito al progetto di arrivare ad una coverage del 91% 
 
 <img width="1382" height="266" alt="coverage" src="https://github.com/user-attachments/assets/65d9a525-d0d1-4163-8bf3-de7f491ac896" />
 
