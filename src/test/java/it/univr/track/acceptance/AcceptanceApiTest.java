@@ -17,6 +17,11 @@ import static org.hamcrest.Matchers.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles({ "gestione-utenti", "gestione-dispositivi" })
+/**
+ * Test di integrazione API che verifica il comportamento dei servizi REST.
+ * Utilizza RestAssured per simulare richieste HTTP dirette agli endpoint del
+ * backend.
+ */
 class AcceptanceApiTest {
 
     @LocalServerPort
@@ -27,6 +32,8 @@ class AcceptanceApiTest {
         RestAssured.port = port;
     }
 
+    // Verifica il flusso completo di registrazione utente via API e controlla che
+    // l'utente sia stato creato correttamente.
     @Test
     void testUserRegistration() {
         String randomUsername = "user_" + UUID.randomUUID().toString().substring(0, 8);
@@ -60,6 +67,8 @@ class AcceptanceApiTest {
                 .body("username", hasItem(randomUsername));
     }
 
+    // Testa il provisioning (registrazione iniziale) di un nuovo dispositivo IoT
+    // nel sistema.
     @Test
     void testDeviceProvisioning() {
         Map<String, Object> device = new HashMap<>();
@@ -76,6 +85,8 @@ class AcceptanceApiTest {
                 .body("status", equalTo("ACTIVE"));
     }
 
+    // Simula il login di un dispositivo precedentemente registrato, verificando
+    // l'autenticazione.
     @Test
     void testDeviceLogin() {
         String deviceName = "LoginTestDevice_" + UUID.randomUUID();
@@ -105,6 +116,8 @@ class AcceptanceApiTest {
                 .body(containsString("Dispositivo autenticato"));
     }
 
+    // Verifica che l'API per listare gli utenti risponda correttamente (solo per
+    // admin).
     @Test
     void testListUsers() {
         given()

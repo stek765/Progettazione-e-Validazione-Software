@@ -26,6 +26,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = SmartTrackApplication.class)
 @Sql(scripts = "/script/adminSIT.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+/**
+ * Test di accettazione End-to-End (E2E) che simula l'interazione utente
+ * completa via browser.
+ * Copre i principali scenari d'uso (User Stories) interagendo con l'interfaccia
+ * web reale.
+ */
 public class AcceptanceWebTest {
 
     @LocalServerPort
@@ -60,6 +66,7 @@ public class AcceptanceWebTest {
         }
     }
 
+    // Scenario 1
     @Test
     public void scenario1_adminCreatesUser() {
         String baseUrl = "http://localhost:" + port;
@@ -96,6 +103,7 @@ public class AcceptanceWebTest {
         assertTrue(utentiPage.isUserPresent(newUsername), "Il nuovo utente dovrebbe apparire nella tabella.");
     }
 
+    // Scenario 2
     @Test
     public void scenario2_profilePasswordChange() {
         String baseUrl = "http://localhost:" + port;
@@ -147,6 +155,7 @@ public class AcceptanceWebTest {
                 "Dopo il login con la nuova password, dovremmo essere in dashboard. URL attuale: " + currentUrl);
     }
 
+    // Scenario 3
     @Test
     public void scenario3_deviceAssignment() {
         String baseUrl = "http://localhost:" + port;
@@ -185,6 +194,7 @@ public class AcceptanceWebTest {
         }
     }
 
+    // Scenario 4
     @Test
     public void scenario4_deviceProvisioning() {
         String baseUrl = "http://localhost:" + port;
@@ -215,6 +225,7 @@ public class AcceptanceWebTest {
         }
     }
 
+    // Scenario 5
     @Test
     public void scenario5_securityPermissions() {
         String baseUrl = "http://localhost:" + port;

@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+// Rappresenta la superclasse astratta per tutte le entità del sistema
 @MappedSuperclass
 @Getter
 @NoArgsConstructor

@@ -18,6 +18,10 @@ import java.util.*;
 
 @Controller
 @RequestMapping("/web")
+/**
+ * Controller amministrativo per associare dispositivi e utenti.
+ * Combina i dati di Device e User per una vista unificata.
+ */
 public class AdminWebController {
 
     @Autowired
@@ -26,6 +30,7 @@ public class AdminWebController {
     @Autowired
     private DeviceRepository deviceRepository;
 
+    // Aggrega utenti e stati dei dispositivi per la tabella di gestione
     @GetMapping("/utenti-e-dispositivi")
     public String deviceAndUsers(Model model, Authentication authentication) {
 
@@ -70,6 +75,7 @@ public class AdminWebController {
         return "deviceAndUsers";
     }
 
+    // Endpoint AJAX per spostare un dispositivo (assegna a utente o scollega)
     @PostMapping("/api/assign-device")
     @ResponseBody
     public ResponseEntity<?> assignDevice(@RequestParam("deviceId") Long deviceId,

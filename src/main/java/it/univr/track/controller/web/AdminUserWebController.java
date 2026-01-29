@@ -20,6 +20,10 @@ import java.security.Principal;
 @Controller
 @RequestMapping("/admin")
 @Log4j2
+/**
+ * Controller per la gestione degli utenti da parte dell'amministratore.
+ * Gestisce visualizzazione, creazione, modifica ed eliminazione degli account.
+ */
 public class AdminUserWebController {
 
     @Autowired
@@ -28,12 +32,16 @@ public class AdminUserWebController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    // Recupera la lista di tutti gli utenti registrati per la visualizzazione in
+    // tabella
     @GetMapping("/users")
     public String listUsers(Model model) {
         model.addAttribute("users", userRepository.findAll());
         return "usersManagmentAdmin";
     }
 
+    // Gestisce l'eliminazione di un utente, impedendo all'admin di cancellare se
+    // stesso
     @PostMapping("/users/delete")
     public String deleteUser(@RequestParam("usernameToDelete") String username, Principal principal,
             RedirectAttributes redirectAttributes) {
@@ -57,6 +65,7 @@ public class AdminUserWebController {
         return "signUp";
     }
 
+    // Elabora la registrazione di un nuovo utente con validazione dei dati
     @PostMapping("/users/register")
     public String registerUser(@Valid @ModelAttribute("userRegistrationDTO") UserRegistrationDTO dto,
             BindingResult result,
@@ -149,11 +158,5 @@ public class AdminUserWebController {
             redirectAttributes.addFlashAttribute("errorMessage", "Errore durante l'aggiornamento.");
             return "redirect:/admin/users";
         });
-    }
-
-    // Also ensuring admin dashboard is reachable if not covered elsewhere
-    @GetMapping("/dashboard")
-    public String adminDashboard() {
-        return "dashboard";
     }
 }

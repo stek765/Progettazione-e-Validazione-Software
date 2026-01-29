@@ -38,6 +38,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = SmartTrackApplication.class)
 @ActiveProfiles("gestione-utenti")
 @Import(SecurityConfig.class)
+/**
+ * Test isolati (slice tests) per il controller dell'interfaccia utente.
+ * Verifica il comportamento delle pagine di base: dashboard, login, profilo e
+ * registrazione.
+ * Simula il comportamento del repository utenti e dell'encoder password.
+ */
 public class UserWebControllerTest {
 
     @Autowired
@@ -67,6 +73,7 @@ public class UserWebControllerTest {
                 .build();
     }
 
+    // Verifica che la home root (/) reindirizzi correttamente alla dashboard
     @Test
     void home_ShouldRedirectToDashboard() throws Exception {
         mockMvc.perform(get("/"))
@@ -74,6 +81,7 @@ public class UserWebControllerTest {
                 .andExpect(redirectedUrl("/dashboard"));
     }
 
+    // Controlla che un utente autenticato possa visualizzare la propria dashboard
     @Test
     @WithMockUser(username = "testUser", roles = "USER")
     void dashboard_Authenticated_ShouldShowDashboard() throws Exception {
@@ -84,6 +92,7 @@ public class UserWebControllerTest {
                 .andExpect(model().attributeExists("activeDevicesCount", "alertsCount"));
     }
 
+    // Verifica che l'accesso alla dashboard richieda l'autenticazione
     @Test
     void dashboard_Unauthenticated_ShouldBeProtected() throws Exception {
         mockMvc.perform(get("/dashboard"))
@@ -92,6 +101,7 @@ public class UserWebControllerTest {
 
     // SignUp Tests
 
+    // Assicura che la form di registrazione venga visualizzata correttamente
     @Test
     void signUpForm_ShouldReturnView() throws Exception {
         mockMvc.perform(get("/signUp"))
@@ -100,6 +110,8 @@ public class UserWebControllerTest {
                 .andExpect(model().attributeExists("userRegistrationDTO"));
     }
 
+    // Testa il flusso di registrazione con successo, verificando il salvataggio su
+    // DB simulato
     @Test
     void doSignUp_Success() throws Exception {
         when(userRepository.findByUsername("newUser")).thenReturn(Optional.empty());
@@ -120,6 +132,7 @@ public class UserWebControllerTest {
         verify(userRepository).save(any(UserRegistered.class));
     }
 
+    // Verifica la gestione degli errori di validazione nel form di registrazione
     @Test
     void doSignUp_ValidationErrors() throws Exception {
         mockMvc.perform(post("/signUp")
@@ -189,6 +202,7 @@ public class UserWebControllerTest {
                 .andExpect(status().isUnauthorized());
     }
 
+    // Verifica che l'utente loggato veda i propri dati nel profilo
     @Test
     @WithMockUser(username = "testUser")
     void showProfile_Authenticated_ShouldReturnView() throws Exception {
@@ -200,6 +214,7 @@ public class UserWebControllerTest {
                 .andExpect(model().attributeExists("userProfile", "passwordChangeDTO"));
     }
 
+    // Testa l'aggiornamento dei dati anagrafici del profilo
     @Test
     @WithMockUser(username = "testUser")
     void updateProfile_Success() throws Exception {
@@ -237,6 +252,8 @@ public class UserWebControllerTest {
 
     // Change Password Tests
 
+    // Verifica il corretto cambio della password, incluso check vecchia password e
+    // conferma
     @Test
     @WithMockUser(username = "testUser")
     void changePassword_Success() throws Exception {

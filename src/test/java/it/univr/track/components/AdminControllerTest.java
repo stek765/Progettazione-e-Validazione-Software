@@ -27,6 +27,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 @WebMvcTest(AdminWebController.class)
+/**
+ * Component Test per il controller AdminWebController.
+ * Verifica la logica di assegnazione dispositivi isolando il controller tramite
+ * MockMvc.
+ * Simula il comportamento del livello dati (Repository) senza accedere al DB
+ * reale.
+ */
 class AdminControllerTest {
 
     @Autowired
@@ -38,6 +45,8 @@ class AdminControllerTest {
     @MockBean
     private DeviceRepository deviceRepository;
 
+    // Verifica che la pagina di gestione sia accessibile all'admin e che il modello
+    // contenga i dati attesi
     @Test
     @WithMockUser(username = "admin", authorities = { "ADMIN" })
     void testAdminPageAccess() throws Exception {
@@ -48,12 +57,14 @@ class AdminControllerTest {
                 .andExpect(model().attributeExists("unassignedDevices"));
     }
 
+    // Verifica che l'accesso sia negato agli utenti non autenticati
     @Test
     void testAccessDeniedForAnonymous() throws Exception {
         mockMvc.perform(get("/web/utenti-e-dispositivi"))
                 .andExpect(status().isUnauthorized());
     }
 
+    // Testa l'assegnazione corretta di un dispositivo a un utente
     @Test
     @WithMockUser(username = "admin", authorities = { "ADMIN" })
     void testAssignDeviceSuccess() throws Exception {

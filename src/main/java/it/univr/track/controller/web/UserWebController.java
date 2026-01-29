@@ -24,6 +24,10 @@ import java.util.Collections;
 
 @Controller
 @Profile("gestione-utenti")
+/**
+ * Controller principale per le funzionalità utente di base (Dashboard, Login,
+ * Registrazione).
+ */
 public class UserWebController {
 
     @Autowired
@@ -37,6 +41,7 @@ public class UserWebController {
         return "redirect:/dashboard";
     }
 
+    // Prepara i dati di riepilogo da mostrare nella dashboard
     @GetMapping("/dashboard")
     public String dashboard(Authentication authentication, Model model) {
         String username = (authentication != null) ? authentication.getName() : "Ospite";
@@ -63,6 +68,8 @@ public class UserWebController {
         return "signUp";
     }
 
+    // Gestisce la registrazione pubblica con controlli su password e username
+    // duplicati
     @PostMapping("/signUp")
     public String doSignUp(@Valid @ModelAttribute("userRegistrationDTO") UserRegistrationDTO dto,
             BindingResult result,
@@ -160,7 +167,7 @@ public class UserWebController {
             BindingResult result,
             Authentication authentication,
             RedirectAttributes redirectAttributes,
-            Model model) { // Added Model for returning isAdmin if errors occur
+            Model model) { // Aggiunto Model per gestire isAdmin in caso di errore
 
         boolean isAdmin = authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ADMIN"));
@@ -178,13 +185,11 @@ public class UserWebController {
             // Aggiorna solo i campi modificabili
             user.setFirstname(dto.getFirstname());
             user.setLastname(dto.getLastname());
-            // user.setEmail(dto.getEmail()); // Spesso l'email è legata all'account,
-            // dipende dalle policy
+            // L'email spesso è vincolata all'account, qui la lasciamo inalterata
             user.setCity(dto.getCity());
             user.setAddress(dto.getAddress());
             user.setTelephoneNumber(dto.getTelephoneNumber());
             user.setTaxIdentificationNumber(dto.getTaxIdentificationNumber());
-            // Gender e Role potrebbero non essere modificabili
 
             userRepository.save(user);
         });
@@ -210,20 +215,19 @@ public class UserWebController {
         if (userOpt.isPresent()) {
             UserRegistered user = userOpt.get();
 
-            // Verify old password
+            // Verifica che la vecchia password corrisponda
             if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword())) {
                 result.rejectValue("oldPassword", "mismatch", "La password attuale non è corretta");
                 return showProfile(authentication, model);
             }
 
-            // Verify confirmation matches new password
+            // Verifica che la conferma della nuova password coincida
             if (!dto.getNewPassword().equals(dto.getConfirmPassword())) {
                 result.rejectValue("confirmPassword", "mismatch", "Le password non coincidono");
                 return showProfile(authentication, model);
             }
 
-            // Regex check for new password (same as registration)
-            // Regex: 8 chars, 1 uppercase, 1 lowercase, 1 digit, 1 special char
+            // Validazione complessità password (stesse regole della registrazione)
             if (!dto.getNewPassword().matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^A-Za-z0-9]).{8,}$")) {
                 result.rejectValue("newPassword", "weak",
                         "La password deve contenere almeno 8 caratteri, una maiuscola, una minuscola, un numero e un carattere speciale.");

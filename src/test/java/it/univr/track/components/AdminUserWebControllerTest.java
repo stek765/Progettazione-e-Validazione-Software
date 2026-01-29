@@ -26,6 +26,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(AdminUserWebController.class)
+/**
+ * Component Test per il controller amministrativo di gestione utenti.
+ * Verifica in isolamento le funzionalità di creazione, modifica, eliminazione e
+ * visualizzazione utenti.
+ * Utilizza MockMvc e MockBean per simulare il contesto Spring e le dipendenze
+ * (Repository).
+ */
 class AdminUserWebControllerTest {
 
     @Autowired
@@ -37,6 +44,8 @@ class AdminUserWebControllerTest {
     @MockBean
     private PasswordEncoder passwordEncoder;
 
+    // Verifica che la pagina di lista utenti ritorni correttamente la vista e il
+    // modello popolato
     @Test
     @WithMockUser(username = "admin", roles = { "ADMIN" })
     void listUsers_ShouldReturnViewAndUsers() throws Exception {
@@ -50,6 +59,8 @@ class AdminUserWebControllerTest {
         verify(userRepository).findAll();
     }
 
+    // Assicura che l'admin non possa auto-eliminarsi per prevenire blocchi del
+    // sistema
     @Test
     @WithMockUser(username = "admin", roles = { "ADMIN" })
     void deleteUser_WhenDeletingSelf_ShouldFail() throws Exception {
@@ -63,6 +74,7 @@ class AdminUserWebControllerTest {
         verify(userRepository, never()).delete(any());
     }
 
+    // Testa la corretta eliminazione di un utente standard da parte dell'admin
     @Test
     @WithMockUser(username = "admin", roles = { "ADMIN" })
     void deleteUser_WhenDeletingOther_ShouldSuccess() throws Exception {
@@ -80,6 +92,7 @@ class AdminUserWebControllerTest {
         verify(userRepository).delete(otherUser);
     }
 
+    // Verifica l'accesso alla form di registrazione amministrativa
     @Test
     @WithMockUser(username = "admin", roles = { "ADMIN" })
     void registerUserForm_ShouldReturnView() throws Exception {
@@ -89,6 +102,7 @@ class AdminUserWebControllerTest {
                 .andExpect(model().attributeExists("userRegistrationDTO"));
     }
 
+    // Testa il flusso di creazione di un nuovo utente da parte dell'admin
     @Test
     @WithMockUser(username = "admin", roles = { "ADMIN" })
     void registerUser_Success() throws Exception {
@@ -111,6 +125,7 @@ class AdminUserWebControllerTest {
         verify(userRepository).save(any(UserRegistered.class));
     }
 
+    // Controllo sul tentativo di registrare un utente con username duplicato
     @Test
     @WithMockUser(username = "admin", roles = { "ADMIN" })
     void registerUser_AlreadyExists() throws Exception {
@@ -131,6 +146,7 @@ class AdminUserWebControllerTest {
         verify(userRepository, never()).save(any());
     }
 
+    // Visualizzazione form modifica per utente esistente
     @Test
     @WithMockUser(username = "admin", roles = { "ADMIN" })
     void editUserForm_UserFound() throws Exception {
@@ -152,6 +168,7 @@ class AdminUserWebControllerTest {
                 .andExpect(model().attributeExists("userEditDTO"));
     }
 
+    // Gestione errore quando l'utente da modificare non esiste
     @Test
     @WithMockUser(username = "admin", roles = { "ADMIN" })
     void editUserForm_UserNotFound() throws Exception {
@@ -163,6 +180,7 @@ class AdminUserWebControllerTest {
                 .andExpect(flash().attribute("errorMessage", "Utente non trovato."));
     }
 
+    // Aggiornamento dati anagrafici utente
     @Test
     @WithMockUser(username = "admin", roles = { "ADMIN" })
     void updateUser_Success() throws Exception {
@@ -187,6 +205,7 @@ class AdminUserWebControllerTest {
         verify(userRepository).save(existingUser);
     }
 
+    // Aggiornamento inclusivo di cambio password (opzionale)
     @Test
     @WithMockUser(username = "admin", roles = { "ADMIN" })
     void updateUser_WithPasswordChange() throws Exception {

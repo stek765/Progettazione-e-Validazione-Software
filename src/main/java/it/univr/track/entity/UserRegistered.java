@@ -18,6 +18,12 @@ import java.util.Locale;
 @NoArgsConstructor
 @Getter
 @Setter
+/**
+ * Entity che rappresenta un utente del sistema, con i relativi dati anagrafici
+ * e credenziali.
+ * Include campi per la gestione della sicurezza (tentativi falliti e blocco
+ * temporaneo).
+ */
 public class UserRegistered extends AbstractEntity {
 
     @Column(unique = true)

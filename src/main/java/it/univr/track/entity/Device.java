@@ -12,6 +12,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @Setter
 @Getter
+/**
+ * Rappresenta un dispositivo fisico (sensore) registrato nella piattaforma.
+ * Può essere associato a un utente o rimanere non assegnato.
+ */
 public class Device extends AbstractEntity {
 
     private String name;
