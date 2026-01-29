@@ -1,18 +1,19 @@
 # Report Progetto Smart-Tracking | MODULO 1
 
-Membri gruppo:
-Stefano Zanolli (VR521385)
+## Membri del Gruppo
+* **Stefano Zanolli** (VR521385)
 
-Tecnologie usate: 
-Java: 17
-Spring Boot: 3.2.2
-Gradle: 8.10
-Jacoco: 0.8.12
-Database: H2 (In-memory)
-Thymeleaf: 3.1.2 (incluso nello starter Web)
-Selenium: 4.24.0
-JUnit: 5.10.2
-Rest Assured: 5.4.0
+---
+
+## Stack Tecnologico
+
+| Componente | Tecnologia | Versione |
+| :--- | :--- | :--- |
+| **Linguaggio** | Java | 17 |
+| **Framework** | Spring Boot | 3.2.2 |
+| **Build Tool** | Gradle | 8.10 |
+| **Database** | H2 (In-memory) | - |
+| **Template Engine** | Thymeleaf | 3.1.2 |
 
 ## Panoramica del Progetto
 **Smart-Tracking** è una piattaforma IoT per la gestione sicura di dispositivi di tracciamento e informazione durante il trasporto di merci.
