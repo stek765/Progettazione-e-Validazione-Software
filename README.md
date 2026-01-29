@@ -118,8 +118,7 @@ verificabile con: `./gradlew test --tests "it.univr.track.acceptance.AcceptanceA
 
 ---
 
-I test creati, sommati tra loro, hanno consentito al progetto di arrivare ad una coverage del 91% 
+I test creati, sommati tra loro, hanno consentito al progetto di arrivare ad una coverage del 93%.  (escludendo dto e entity che sono semplici contenitori che non richiedono verifica)
 
-<img width="1382" height="266" alt="coverage" src="https://github.com/user-attachments/assets/65d9a525-d0d1-4163-8bf3-de7f491ac896" />
-
+<img width="1071" height="204" alt="Screenshot 2026-01-29 alle 11 46 34" src="https://github.com/user-attachments/assets/bfb8345f-bf12-4d95-9e53-a5fce9506c2b" />
 
