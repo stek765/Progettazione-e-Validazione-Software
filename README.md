@@ -3,6 +3,17 @@
 Membri gruppo:
 Stefano Zanolli (VR521385)
 
+Tecnologie usate: 
+Java: 17
+Spring Boot: 3.2.2
+Gradle: 8.10
+Jacoco: 0.8.12
+Database: H2 (In-memory)
+Thymeleaf: 3.1.2 (incluso nello starter Web)
+Selenium: 4.24.0
+JUnit: 5.10.2
+Rest Assured: 5.4.0
+
 ## Panoramica del Progetto
 **Smart-Tracking** è una piattaforma IoT per la gestione sicura di dispositivi di tracciamento e informazione durante il trasporto di merci.
 L'idea del progetto del corso, era di simulare più team ognuno con un modulo diverso che a fine sviluppo avrebbero dovuto unire insieme, garantendone il funzionamento e la sicurezza.
