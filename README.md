@@ -1,13 +1,5 @@
 # Report Progetto Smart-Tracking | MODULO 1
 
-
-<u>Membri gruppo:
-Stefano Zanolli (VR521385)</u>
-
-
-Markdown
-# Report Progetto Smart-Tracking | MODULO 1
-
 Membri gruppo: Stefano Zanolli (VR521385)
 
 
