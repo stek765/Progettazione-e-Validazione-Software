@@ -20,7 +20,7 @@ Membri gruppo: Stefano Zanolli (VR521385)
 ## Panoramica del Progetto
 **Smart-Tracking** è una piattaforma IoT per la gestione sicura di dispositivi di tracciamento e informazione durante il trasporto di merci.
 L'idea del progetto del corso, era di simulare più team ognuno con un modulo diverso che a fine sviluppo avrebbero dovuto unire insieme, garantendone il funzionamento e la sicurezza.
-<hr>
+
 
 Il **Modulo 1** si occupa di gestire l'ecosistema di Utenti e Dispositivi prima che inizi il flusso dati vero e proprio, e contiene le seguenti tematiche:
 
