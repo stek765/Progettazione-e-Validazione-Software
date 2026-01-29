@@ -10,60 +10,10 @@ Markdown
 
 Membri gruppo: Stefano Zanolli (VR521385)
 
-**Tecnologie usate**:
 
-<table style="border: none; border-collapse: collapse; width: 100%;">
-  <tr style="border: none;">
-    <td style="border: none; width: 70%; vertical-align: top;">
-      <table style="width: 100%;">
-        <thead>
-          <tr>
-            <th align="left">Componente</th>
-            <th align="left">Tecnologia</th>
-            <th align="left">Versione</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><b>Linguaggio</b></td>
-            <td>Java</td>
-            <td>17</td>
-          </tr>
-          <tr>
-            <td><b>Framework</b></td>
-            <td>Spring Boot</td>
-            <td>3.2.2</td>
-          </tr>
-          <tr>
-            <td><b>Build Tool</b></td>
-            <td>Gradle</td>
-            <td>8.10</td>
-          </tr>
-          <tr>
-            <td><b>Database</b></td>
-            <td>H2 (In-memory)</td>
-            <td>-</td>
-          </tr>
-          <tr>
-            <td><b>Template Engine</b></td>
-            <td>Thymeleaf</td>
-            <td>3.1.2</td>
-          </tr>
-        </tbody>
-      </table>
-    </td>
-    <td style="border: none; width: 30%; text-align: center; vertical-align: middle; padding-left: 20px;">
-      <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/java/java-original-wordmark.svg" width="80" alt="Java"><br><br>
-      <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/spring/spring-original-wordmark.svg" width="100" alt="Spring"><br><br>
-      <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/gradle/gradle-original-wordmark.svg" width="100" alt="Gradle">
-    </td>
-  </tr>
-</table>
-
-
-
----
-**Tecnologie usate**:  <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/java/java-original-wordmark.svg" alt="Java Logo" width="120"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/spring/spring-original-wordmark.svg" alt="Spring Logo" width="120"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/gradle/gradle-original-wordmark.svg" alt="Gradle Logo" width="120">
+**Tecnologie usate**: <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/java/java-original-wordmark.svg" alt="Java Logo" width="120" style="margin-right: 40px;"> 
+<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/spring/spring-original-wordmark.svg" alt="Spring Logo" width="120" style="margin-right: 40px;"> 
+<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/gradle/gradle-original-wordmark.svg" alt="Gradle Logo" width="120">
 
 | Componente | Tecnologia | Versione |
 | :--- | :--- | :--- |
