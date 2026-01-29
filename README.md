@@ -43,7 +43,7 @@ L'architettura segue il pattern **MVC (Model-View-Controller)** standard di Spri
 | Azione | Comando | Descrizione |
 | :--- | :--- | :--- |
 | **Avviare l'App** | `./gradlew bootRun` | Avvia il server su localhost:8080 |
-| **Build del Progetto** | `./gradlew build` | Compila e pacchettizza l'applicazione |
+| **Build del Progetto** | `./gradlew clean build` | Compila e pacchettizza l'applicazione |
 | **Eseguire TUTTI i Test** | `./gradlew test` | Lancia Unit, Integration e Acceptance Tests |
 | **Test Singolo** | `./gradlew test --tests "NomeClasse"` | Esegue solo una specifica classe di test |
 | **Report Copertura** | `./gradlew jacocoTestReport` | Genera il report HTML (in `build/reports/jacoco`) |
