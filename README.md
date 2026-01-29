@@ -4,28 +4,7 @@
 <u>Membri gruppo:
 Stefano Zanolli (VR521385)</u>
 
-**Tecnologie usate**:
-
-<table style="border: none; border-collapse: collapse; width: 100%;">
-  <tr style="border: none;">
-    <td style="border: none; width: 60%; vertical-align: top;">
-      | Componente | Tecnologia | Versione |
-      | :--- | :--- | :--- |
-      | **Linguaggio** | Java | 17 |
-      | **Framework** | Spring Boot | 3.2.2 |
-      | **Build Tool** | Gradle | 8.10 |
-      | **Database** | H2 (In-memory) | - |
-      | **Template Engine** | Thymeleaf | 3.1.2 |
-    </td>
-    <td style="border: none; width: 40%; text-align: right; vertical-align: middle; padding-right: 20px;">
-      <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/java/java-original-wordmark.svg" alt="Java Logo" width="100">
-    </td>
-  </tr>
-</table>
-
-
-
----
+**Tecnologie usate**:  <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/java/java-original-wordmark.svg" alt="Java Logo" width="120">
 
 | Componente | Tecnologia | Versione |
 | :--- | :--- | :--- |
@@ -35,9 +14,6 @@ Stefano Zanolli (VR521385)</u>
 | **Database** | H2 (In-memory) | - |
 | **Template Engine** | Thymeleaf | 3.1.2 |
 
-<td style="width: 30%; border: none; text-align: center; vertical-align: middle;">
-      <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/java/java-original-wordmark.svg" alt="Java Logo" width="120">
-    </td>
 
 ## Panoramica del Progetto
 **Smart-Tracking** è una piattaforma IoT per la gestione sicura di dispositivi di tracciamento e informazione durante il trasporto di merci.
