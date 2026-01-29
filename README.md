@@ -55,6 +55,9 @@ Stefano Zanolli (VR521385)</u>
 </table>
 
 
+
+---
+
 | Componente | Tecnologia | Versione |
 | :--- | :--- | :--- |
 | **Linguaggio** | Java | 17 |
