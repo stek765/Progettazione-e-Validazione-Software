@@ -4,7 +4,7 @@
 <u>Membri gruppo:
 Stefano Zanolli (VR521385)</u>
 
-**Tecnologie usate**:  <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/java/java-original-wordmark.svg" alt="Java Logo" width="120">
+**Tecnologie usate**:  <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/java/java-original-wordmark.svg" alt="Java Logo" width="120"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/spring/spring-original-wordmark.svg" alt="Spring Logo" width="120"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/gradle/gradle-original-wordmark.svg" alt="Gradle Logo" width="120">
 
 | Componente | Tecnologia | Versione |
 | :--- | :--- | :--- |
