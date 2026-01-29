@@ -4,7 +4,7 @@
 Membri gruppo:
 Stefano Zanolli (VR521385)
 
-Tecnologie usate:
+**Tecnologie usate**:
 
 | Componente | Tecnologia | Versione |
 | :--- | :--- | :--- |
