@@ -4,6 +4,30 @@
 <u>Membri gruppo:
 Stefano Zanolli (VR521385)</u>
 
+
+<table style="border: none; border-collapse: collapse; width: 100%;">
+  <tr style="border: none;">
+    <td style="border: none; width: 60%; vertical-align: top;">
+      | Componente | Tecnologia | Versione |
+      | :--- | :--- | :--- |
+      | **Linguaggio** | Java | 17 |
+      | **Framework** | Spring Boot | 3.2.2 |
+      | **Build Tool** | Gradle | 8.10 |
+      | **Database** | H2 (In-memory) | - |
+      | **Template Engine** | Thymeleaf | 3.1.2 |
+    </td>
+    <td style="border: none; width: 40%; text-align: center; vertical-align: middle;">
+      <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/java/java-original-wordmark.svg" alt="Java" width="80" style="margin: 10px;">
+      <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/spring/spring-original-wordmark.svg" alt="Spring" width="80" style="margin: 10px;">
+      <br>
+      <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/gradle/gradle-original-wordmark.svg" alt="Gradle" width="80" style="margin: 10px;">
+    </td>
+  </tr>
+</table>
+
+
+
+---
 **Tecnologie usate**:  <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/java/java-original-wordmark.svg" alt="Java Logo" width="120"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/spring/spring-original-wordmark.svg" alt="Spring Logo" width="120"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/gradle/gradle-original-wordmark.svg" alt="Gradle Logo" width="120">
 
 | Componente | Tecnologia | Versione |
