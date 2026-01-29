@@ -14,6 +14,10 @@ Stefano Zanolli (VR521385)</u>
 | **Database** | H2 (In-memory) | - |
 | **Template Engine** | Thymeleaf | 3.1.2 |
 
+<td style="width: 30%; border: none; text-align: center; vertical-align: middle;">
+      <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/java/java-original-wordmark.svg" alt="Java Logo" width="120">
+    </td>
+
 ## Panoramica del Progetto
 **Smart-Tracking** è una piattaforma IoT per la gestione sicura di dispositivi di tracciamento e informazione durante il trasporto di merci.
 L'idea del progetto del corso, era di simulare più team ognuno con un modulo diverso che a fine sviluppo avrebbero dovuto unire insieme, garantendone il funzionamento e la sicurezza.
