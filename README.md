@@ -6,6 +6,55 @@ Stefano Zanolli (VR521385)</u>
 
 **Tecnologie usate**:
 
+**Tecnologie usate**:
+
+<table style="border: none;">
+  <tr style="border: none;">
+    <td style="border: none; vertical-align: top;">
+      <table>
+        <thead>
+          <tr>
+            <th>Componente</th>
+            <th>Tecnologia</th>
+            <th>Versione</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>Linguaggio</b></td>
+            <td>Java</td>
+            <td>17</td>
+          </tr>
+          <tr>
+            <td><b>Framework</b></td>
+            <td>Spring Boot</td>
+            <td>3.2.2</td>
+          </tr>
+          <tr>
+            <td><b>Build Tool</b></td>
+            <td>Gradle</td>
+            <td>8.10</td>
+          </tr>
+          <tr>
+            <td><b>Database</b></td>
+            <td>H2 (In-memory)</td>
+            <td>-</td>
+          </tr>
+          <tr>
+            <td><b>Template Engine</b></td>
+            <td>Thymeleaf</td>
+            <td>3.1.2</td>
+          </tr>
+        </tbody>
+      </table>
+    </td>
+    <td style="border: none; vertical-align: middle; padding-left: 20px;">
+      <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/java/java-original-wordmark.svg" alt="Java Logo" width="120">
+    </td>
+  </tr>
+</table>
+
+
 | Componente | Tecnologia | Versione |
 | :--- | :--- | :--- |
 | **Linguaggio** | Java | 17 |
